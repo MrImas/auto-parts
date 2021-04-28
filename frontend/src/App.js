@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Products } from './Products/pages/Products';
 
 import { MainNavigation } from './shared/components/MainNavigation';
 
@@ -7,11 +8,13 @@ const App = () => {
   return (
     <Router>
       <MainNavigation />
-      <Switch>
-        <Route path='/' exact>
-          <div>hello /</div>
-        </Route>
-      </Switch>
+      <main>
+        <Switch>
+          <Route path='/' exact>
+            <Products />
+          </Route>
+        </Switch>
+      </main>
     </Router>
   );
 };
