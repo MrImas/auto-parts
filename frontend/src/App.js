@@ -1,7 +1,8 @@
 import React from 'react';
+import { MainNavigation } from './shared/components/MainNavigation';
 
 const App = () => {
-  return <h1>Hello world!</h1>;
+  return <MainNavigation />;
 };
 
 export default App;
