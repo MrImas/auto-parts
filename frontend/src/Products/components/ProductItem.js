@@ -19,6 +19,11 @@ const useStyles = makeStyles({
   actionButton: {
     padding: '8px 45px',
   },
+  image: {
+    height: '250px',
+    margin: 'auto',
+    objectFit: 'contain',
+  },
 });
 
 export const ProductItem = (props) => {
@@ -28,21 +33,33 @@ export const ProductItem = (props) => {
       <Card>
         <CardActionArea>
           <CardMedia
-            style={{ height: '140px', width: '100px' }}
+            className={classes.image}
             image={props.image}
             title={props.title}
           />
         </CardActionArea>
         <CardContent>
           <Typography variant='h4'>{props.title}</Typography>
-          <Typography variant='h6'>${props.price}</Typography>
+          <Typography color='secondary' variant='h6'>
+            ${props.price}
+          </Typography>
           <Typography variant='body1'>{props.description}</Typography>
         </CardContent>
         <CardActions className={classes.cardActionsContainer}>
-          <Button variant='contained' size='large' color='primary'>
+          <Button
+            className={classes.actionButton}
+            variant='contained'
+            size='large'
+            color='primary'
+          >
             BUY
           </Button>
-          <Button variant='contained' size='large' color='secondary'>
+          <Button
+            className={classes.actionButton}
+            variant='contained'
+            size='large'
+            color='secondary'
+          >
             VIEW
           </Button>
         </CardActions>
