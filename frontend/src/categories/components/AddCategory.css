@@ -1,0 +1,11 @@
+.add-category {
+  width: 30%;
+  /* display: flex;
+  justify-content: center;
+  align-items: flex-start; */
+}
+
+.category-form {
+  display: flex;
+  align-items: flex-end;
+}

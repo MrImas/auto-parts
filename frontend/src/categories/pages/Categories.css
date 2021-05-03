@@ -1,0 +1,7 @@
+.categories {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 75%;
+  margin: auto;
+}
