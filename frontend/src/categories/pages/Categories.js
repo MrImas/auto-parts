@@ -1,4 +1,5 @@
 import React from 'react';
+import { CategoryList } from '../components/CategoryList';
 
 const DUMMY_CATEGORIES = [
   {
@@ -13,5 +14,9 @@ const DUMMY_CATEGORIES = [
 ];
 
 export const Categories = () => {
-  return <div>Categories</div>;
+  return (
+    <div>
+      <CategoryList items={DUMMY_CATEGORIES} />
+    </div>
+  );
 };
