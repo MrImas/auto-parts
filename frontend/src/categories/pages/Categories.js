@@ -17,10 +17,22 @@ const DUMMY_CATEGORIES = [
 ];
 
 export const Categories = () => {
+  const [categories, setCategories] = useState(DUMMY_CATEGORIES);
+
+  const addCategoryHandler = (categoryName) => {
+    setCategories([...categories, { name: categoryName.trim() }]);
+  };
+
+  const deleteCategoryHandler = (categoryName) => {
+    setCategories(
+      categories.filter((category) => category.name !== categoryName)
+    );
+  };
+
   return (
     <div className='categories'>
-      <AddCategory />
-      <CategoryList items={DUMMY_CATEGORIES} />
+      <AddCategory categories={categories} onAdd={addCategoryHandler} />
+      <CategoryList items={categories} onDelete={deleteCategoryHandler} />
     </div>
   );
 };

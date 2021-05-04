@@ -7,7 +7,11 @@ export const CategoryList = (props) => {
   return (
     <ul className='category-list'>
       {props.items.map((category) => (
-        <CategoryItem key={category.name} name={category.name} />
+        <CategoryItem
+          key={category.name}
+          name={category.name}
+          onDelete={props.onDelete}
+        />
       ))}
     </ul>
   );

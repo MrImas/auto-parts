@@ -27,7 +27,12 @@ export const CategoryItem = (props) => {
           <Typography>{props.name}</Typography>
         </CardContent>
         <CardActions>
-          <Button variant='contained' size='large' color='secondary'>
+          <Button
+            onClick={() => props.onDelete(props.name)}
+            variant='contained'
+            size='large'
+            color='secondary'
+          >
             DELETE
           </Button>
         </CardActions>

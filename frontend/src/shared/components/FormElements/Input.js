@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { TextField } from '@material-ui/core';
 
 import { validate } from '../../util/validation';
@@ -18,9 +18,14 @@ const inputReducer = (state, action) => {
 
 const InputCustomized = (props) => {
   const [inputState, dispatch] = useReducer(inputReducer, {
-    value: '',
+    value: props.initialValue || '',
     isValid: false,
   });
+
+  useEffect(() => {
+    props.onInput(inputState.value, inputState.isValid);
+  }, [props.onInput, inputState.value, inputState.isValid]);
+
   const changeInputHandler = (event) => {
     dispatch({
       type: 'INPUT_CHANGE',
@@ -29,7 +34,14 @@ const InputCustomized = (props) => {
     });
   };
 
-  return <TextField value={inputState.value} onChange={changeInputHandler} />;
+  return (
+    <TextField
+      value={inputState.value}
+      onChange={changeInputHandler}
+      error={!props.isValid || !inputState.isValid}
+      helperText={(!props.isValid || !inputState.isValid) && props.errorText}
+    />
+  );
 };
 
 export default InputCustomized;
