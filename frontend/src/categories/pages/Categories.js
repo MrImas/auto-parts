@@ -20,7 +20,7 @@ export const Categories = () => {
   return (
     <div className='categories'>
       <AddCategory />
-      <CategoryList items={categories} />
+      <CategoryList items={DUMMY_CATEGORIES} />
     </div>
   );
 };
