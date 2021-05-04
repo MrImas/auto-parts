@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { AddCategory } from '../components/AddCategory';
 import { CategoryList } from '../components/CategoryList';
@@ -20,7 +20,7 @@ export const Categories = () => {
   return (
     <div className='categories'>
       <AddCategory />
-      <CategoryList items={DUMMY_CATEGORIES} />
+      <CategoryList items={categories} />
     </div>
   );
 };
