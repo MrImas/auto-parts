@@ -11,6 +11,11 @@ const inputReducer = (state, action) => {
         value: action.value,
         isValid: validate(action.value, action.validators),
       };
+    case 'TOUCHED':
+      return {
+        ...state,
+        isTouched: true,
+      };
     default:
       return state;
   }
@@ -19,12 +24,15 @@ const inputReducer = (state, action) => {
 const InputCustomized = (props) => {
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: props.initialValue || '',
-    isValid: false,
+    isTouched: false,
+    isValid: props.initialValid || false,
   });
 
+  const { onInput } = props;
+
   useEffect(() => {
-    props.onInput(inputState.value, inputState.isValid);
-  }, [props.onInput, inputState.value, inputState.isValid]);
+    onInput(inputState.value, inputState.isValid);
+  }, [onInput, inputState.value, inputState.isValid]);
 
   const changeInputHandler = (event) => {
     dispatch({
@@ -34,12 +42,24 @@ const InputCustomized = (props) => {
     });
   };
 
+  const onBlurHandler = () => {
+    dispatch({ type: 'TOUCHED' });
+  };
+
   return (
     <TextField
+      type={props.type || 'text'}
+      label={props.label}
       value={inputState.value}
+      multiline={Boolean(props.rows)}
+      rows={props.rows || 1}
+      onBlur={onBlurHandler}
       onChange={changeInputHandler}
-      error={!props.isValid || !inputState.isValid}
-      helperText={(!props.isValid || !inputState.isValid) && props.errorText}
+      error={!inputState.isValid && inputState.isTouched}
+      helperText={
+        !inputState.isValid && inputState.isTouched && props.errorText
+      }
+      variant={props.variant || 'standard'}
     />
   );
 };
