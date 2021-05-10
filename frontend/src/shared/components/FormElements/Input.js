@@ -1,7 +1,20 @@
 import React, { useEffect, useReducer } from 'react';
-import { TextField } from '@material-ui/core';
+import {
+  InputLabel,
+  Select,
+  TextField,
+  FormControl,
+  MenuItem,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { validate } from '../../util/validation';
+
+const useStyles = makeStyles({
+  formElement: {
+    minWidth: '250px',
+  },
+});
 
 const inputReducer = (state, action) => {
   switch (action.type) {
@@ -28,11 +41,13 @@ const InputCustomized = (props) => {
     isValid: props.initialValid || false,
   });
 
-  const { onInput } = props;
+  const classes = useStyles();
+
+  const { onInput, id } = props;
 
   useEffect(() => {
-    onInput(inputState.value, inputState.isValid);
-  }, [onInput, inputState.value, inputState.isValid]);
+    onInput(id, inputState.value, inputState.isValid);
+  }, [onInput, id, inputState.value, inputState.isValid]);
 
   const changeInputHandler = (event) => {
     dispatch({
@@ -46,6 +61,29 @@ const InputCustomized = (props) => {
     dispatch({ type: 'TOUCHED' });
   };
 
+  if (props.type === 'select') {
+    return (
+      <FormControl className={classes.formElement}>
+        <InputLabel shrink id={`${props.id}-select`}>
+          {props.label}
+        </InputLabel>
+        <Select
+          labelId={`${props.id}-select`}
+          id={props.id}
+          value={inputState.value}
+          onChange={changeInputHandler}
+          displayEmpty
+        >
+          <MenuItem value=''>Please Select Category</MenuItem>
+          {props.selectItems.map((selectItem) => (
+            <MenuItem key={selectItem} value={selectItem}>
+              {selectItem}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    );
+  }
   return (
     <TextField
       type={props.type || 'text'}
