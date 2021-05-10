@@ -4,7 +4,7 @@ import { Categories } from './categories/pages/Categories';
 import { CreateProduct } from './Products/pages/CreateProduct';
 import { Products } from './Products/pages/Products';
 
-import { MainNavigation } from './shared/components/MainNavigation';
+import { MainNavigation } from './shared/components/Navigation/MainNavigation';
 
 const App = () => {
   return (
