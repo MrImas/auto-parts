@@ -78,7 +78,6 @@ export const CreateProduct = () => {
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
-    console.log('Fd');
     console.log(formState);
   };
 
