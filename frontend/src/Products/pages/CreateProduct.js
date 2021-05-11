@@ -1,6 +1,7 @@
-import React, { useReducer, useCallback } from 'react';
+import React from 'react';
 import { Card } from '@material-ui/core';
 
+import { useProductForm } from '../../shared/hooks/product-form-hook';
 import { VALIDATOR_REQUIRE } from '../../shared/util/validation';
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
@@ -18,36 +19,9 @@ const DUMMY_CATEGORIES = [
   },
 ];
 
-const productReducer = (state, action) => {
-  switch (action.type) {
-    case 'INPUT_CHANGE':
-      let formIsValid = true;
-      for (const inputId in state.inputs) {
-        if (inputId === action.inputId) {
-          formIsValid = formIsValid && action.isValid;
-        } else {
-          formIsValid = formIsValid && state.inputs[inputId].isValid;
-        }
-      }
-      return {
-        ...state,
-        inputs: {
-          ...state.inputs,
-          [action.inputId]: {
-            value: action.value,
-            isValid: action.isValid,
-          },
-        },
-        isValid: formIsValid,
-      };
-    default:
-      return state;
-  }
-};
-
 export const CreateProduct = () => {
-  const [formState, dispatch] = useReducer(productReducer, {
-    inputs: {
+  const [formState, inputHandler] = useProductForm(
+    {
       title: {
         value: '',
         isValid: false,
@@ -69,12 +43,8 @@ export const CreateProduct = () => {
         isValid: false,
       },
     },
-    isValid: false,
-  });
-
-  const inputHandler = useCallback((id, value, isValid) => {
-    dispatch({ type: 'INPUT_CHANGE', inputId: id, value, isValid });
-  }, []);
+    false
+  );
 
   const onSubmitHandler = (event) => {
     event.preventDefault();

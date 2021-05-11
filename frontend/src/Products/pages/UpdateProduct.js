@@ -1,7 +1,8 @@
-import React, { useReducer, useCallback, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card } from '@material-ui/core';
 
+import { useProductForm } from '../../shared/hooks/product-form-hook';
 import { VALIDATOR_REQUIRE } from '../../shared/util/validation';
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
@@ -45,44 +46,12 @@ const DUMMY_PRODUCTS = [
   },
 ];
 
-const productReducer = (state, action) => {
-  switch (action.type) {
-    case 'INPUT_CHANGE':
-      let formIsValid = true;
-      for (const inputId in state.inputs) {
-        if (inputId === action.inputId) {
-          formIsValid = formIsValid && action.isValid;
-        } else {
-          formIsValid = formIsValid && state.inputs[inputId].isValid;
-        }
-      }
-      return {
-        ...state,
-        inputs: {
-          ...state.inputs,
-          [action.inputId]: {
-            value: action.value,
-            isValid: action.isValid,
-          },
-        },
-        isValid: formIsValid,
-      };
-    case 'SET_DATA':
-      return {
-        inputs: action.inputs,
-        isValid: action.isValid,
-      };
-    default:
-      return state;
-  }
-};
-
 export const UpdateProduct = () => {
   const [isLoading, setIsLoading] = useState(true);
   const productId = useParams().productId;
 
-  const [formState, dispatch] = useReducer(productReducer, {
-    inputs: {
+  const [formState, inputHandler, setDataHandler] = useProductForm(
+    {
       title: {
         value: '',
         isValid: false,
@@ -104,17 +73,16 @@ export const UpdateProduct = () => {
         isValid: false,
       },
     },
-    isValid: false,
-  });
+    false
+  );
 
   const identifiedProduct = DUMMY_PRODUCTS.find(
     (product) => product.id === productId
   );
 
   useEffect(() => {
-    dispatch({
-      type: 'SET_DATA',
-      inputs: {
+    setDataHandler(
+      {
         title: {
           value: identifiedProduct.title,
           isValid: true,
@@ -136,14 +104,10 @@ export const UpdateProduct = () => {
           isValid: true,
         },
       },
-      isValid: true,
-    });
+      true
+    );
     setIsLoading(false);
-  }, [identifiedProduct]);
-
-  const inputHandler = useCallback((id, value, isValid) => {
-    dispatch({ type: 'INPUT_CHANGE', inputId: id, value, isValid });
-  }, []);
+  }, [setDataHandler, identifiedProduct]);
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
