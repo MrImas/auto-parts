@@ -54,6 +54,7 @@ export const AddCategory = (props) => {
       <Typography variant='h6'>CATEGORY</Typography>
       <form className='category-form' onSubmit={onSubmitHandler}>
         <Input
+          id='category'
           onInput={inputHandler}
           validators={[VALIDATOR_REQUIRE()]}
           errorText={'Please enter a category name. The name must be unique.'}

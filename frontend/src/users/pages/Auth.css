@@ -1,0 +1,13 @@
+.authentication-form {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  min-height: 300px;
+  justify-content: space-around;
+  align-items: center;
+  margin: auto;
+}
+
+.authentication-form hr {
+  width: 85%;
+}
