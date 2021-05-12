@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card } from '@material-ui/core';
 
-import { useProductForm } from '../../shared/hooks/product-form-hook';
+import { useForm } from '../../shared/hooks/product-form-hook';
 import { VALIDATOR_REQUIRE } from '../../shared/util/validation';
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
@@ -50,7 +50,7 @@ export const UpdateProduct = () => {
   const [isLoading, setIsLoading] = useState(true);
   const productId = useParams().productId;
 
-  const [formState, inputHandler, setDataHandler] = useProductForm(
+  const [formState, inputHandler, setDataHandler] = useForm(
     {
       title: {
         value: '',

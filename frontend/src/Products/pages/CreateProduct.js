@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '@material-ui/core';
 
-import { useProductForm } from '../../shared/hooks/product-form-hook';
+import { useForm } from '../../shared/hooks/product-form-hook';
 import { VALIDATOR_REQUIRE } from '../../shared/util/validation';
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
@@ -20,7 +20,7 @@ const DUMMY_CATEGORIES = [
 ];
 
 export const CreateProduct = () => {
-  const [formState, inputHandler] = useProductForm(
+  const [formState, inputHandler] = useForm(
     {
       title: {
         value: '',
