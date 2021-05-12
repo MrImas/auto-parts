@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Card } from '@material-ui/core';
 
 import { useForm } from '../../shared/hooks/product-form-hook';
@@ -9,6 +9,7 @@ import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
 } from '../../shared/util/validation';
+import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
 
 export const Auth = () => {
@@ -23,6 +24,8 @@ export const Auth = () => {
     },
   });
   const [isLoginMode, setIsLoginMode] = useState(true);
+
+  const auth = useContext(AuthContext);
 
   const changeLoginModeHandler = () => {
     if (!isLoginMode) {
@@ -49,6 +52,7 @@ export const Auth = () => {
   const onSubmitHandler = (event) => {
     event.preventDefault();
     console.log(authFormState.inputs);
+    auth.login();
   };
 
   return (
