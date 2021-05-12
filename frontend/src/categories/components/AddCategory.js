@@ -16,11 +16,6 @@ const addCategoryReducer = (state, action) => {
         value: action.value,
         isValid: !Boolean(foundCategory) && action.isValid,
       };
-    case 'SET':
-      return {
-        value: action.value,
-        isValid: false,
-      };
     default:
       return state;
   }
@@ -33,7 +28,7 @@ export const AddCategory = (props) => {
   });
 
   const inputHandler = useCallback(
-    (categoryVal, isValid) => {
+    (id, categoryVal, isValid) => {
       dispatch({
         type: 'CHANGE',
         value: categoryVal,
@@ -59,6 +54,7 @@ export const AddCategory = (props) => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText={'Please enter a category name. The name must be unique.'}
           isValid={addCategoryState.isValid}
+          initialValue={addCategoryState.value}
         />
         <Button
           disabled={!addCategoryState.isValid}
