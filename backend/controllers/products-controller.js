@@ -84,3 +84,15 @@ export const updateProduct = (req, res, next) => {
   DUMMY_PRODUCTS[productIndexToUpdate] = updatedProduct;
   res.json({ product: updatedProduct });
 };
+
+export const deleteProduct = (req, res, next) => {
+  const productId = req.params.pid;
+  const productToDelete = DUMMY_PRODUCTS.find((p) => p.id === productId);
+  if (!productToDelete) {
+    return next(
+      new HttpError(`Could not find any product with id: ${productId}`)
+    );
+  }
+  DUMMY_PRODUCTS = DUMMY_PRODUCTS.filter((p) => p.id !== productId);
+  res.json({ product: productToDelete });
+};

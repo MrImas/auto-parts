@@ -14,8 +14,6 @@ productsRouter.get('/:pid', productsController.getProduct);
 
 productsRouter.patch('/:pid', productsController.updateProduct);
 
-productsRouter.delete('/:pid', (req, res, next) =>
-  res.json({ message: `delete product with id: ${req.params.pid}` })
-);
+productsRouter.delete('/:pid', productsController.deleteProduct);
 
 export default productsRouter;
