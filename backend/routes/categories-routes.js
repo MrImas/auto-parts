@@ -1,10 +1,10 @@
 import express from 'express';
 
+import * as categoriesController from '../controllers/categories-controller.js';
+
 const categoriesRouter = express.Router();
 
-categoriesRouter.get('/', (req, res, next) =>
-  res.json({ message: 'get all categories' })
-);
+categoriesRouter.get('/', categoriesController.getCategories);
 
 categoriesRouter.post('/', (req, res, next) =>
   res.json({ message: 'create categorie' })
