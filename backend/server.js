@@ -3,12 +3,14 @@ import bodyParser from 'body-parser';
 
 import productsRouter from './routes/products-routes.js';
 import HttpError from './models/http-errors.js';
+import categoriesRouter from './routes/categories-routes.js';
 
 const app = express();
 
 app.use(bodyParser.json());
 
 app.use('/api/products', productsRouter);
+app.use('/api/categories', categoriesRouter);
 
 app.use((req, res, next) => {
   next(new HttpError('Could not find this route', 404));
