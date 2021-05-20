@@ -8,9 +8,7 @@ productsRouter.get('/', productsController.getProducts);
 
 productsRouter.post('/', productsController.createProduct);
 
-productsRouter.delete('/', (req, res, next) =>
-  res.json({ message: 'delete all products.' })
-);
+productsRouter.delete('/', productsController.deleteProducts);
 
 productsRouter.get('/:pid', (req, res, next) =>
   res.json({ message: `get product with id: ${req.params.pid}` })

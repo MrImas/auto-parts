@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-const DUMMY_PRODUCTS = [
+let DUMMY_PRODUCTS = [
   {
     id: 'p1',
     title: 'Wheel',
@@ -43,4 +43,10 @@ export const createProduct = (req, res, next) => {
   };
   DUMMY_PRODUCTS.push(createdProduct);
   res.status(201).json({ product: createdProduct });
+};
+
+export const deleteProducts = (req, res, next) => {
+  const productsDeleted = [...DUMMY_PRODUCTS];
+  DUMMY_PRODUCTS = [];
+  res.json({ products: productsDeleted });
 };
