@@ -1,10 +1,10 @@
 import express from 'express';
 
+import * as productsController from '../controllers/products-controller.js';
+
 const productsRouter = express.Router();
 
-productsRouter.get('/', (req, res, next) =>
-  res.json({ message: 'get all products.' })
-);
+productsRouter.get('/', productsController.getProducts);
 
 productsRouter.post('/', (req, res, next) =>
   res.json({ message: `create product with props: ${req.body}` })
