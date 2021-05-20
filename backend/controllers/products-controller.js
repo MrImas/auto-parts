@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 const DUMMY_PRODUCTS = [
   {
     id: 'p1',
@@ -27,4 +28,19 @@ const DUMMY_PRODUCTS = [
 
 export const getProducts = (req, res, next) => {
   res.json({ products: DUMMY_PRODUCTS });
+};
+
+export const createProduct = (req, res, next) => {
+  const { title, price, description, content, image, category } = req.body;
+  const createdProduct = {
+    id: uuidv4(),
+    title,
+    price,
+    description,
+    content,
+    image,
+    category,
+  };
+  DUMMY_PRODUCTS.push(createdProduct);
+  res.status(201).json({ product: createdProduct });
 };

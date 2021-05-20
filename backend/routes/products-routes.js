@@ -6,9 +6,7 @@ const productsRouter = express.Router();
 
 productsRouter.get('/', productsController.getProducts);
 
-productsRouter.post('/', (req, res, next) =>
-  res.json({ message: `create product with props: ${req.body}` })
-);
+productsRouter.post('/', productsController.createProduct);
 
 productsRouter.delete('/', (req, res, next) =>
   res.json({ message: 'delete all products.' })
