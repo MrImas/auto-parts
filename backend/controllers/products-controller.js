@@ -64,3 +64,23 @@ export const getProduct = (req, res, next) => {
   }
   res.json({ product });
 };
+
+export const updateProduct = (req, res, next) => {
+  const productId = req.params.pid;
+  const propsChanges = req.body;
+  const productToUpdate = DUMMY_PRODUCTS.find((p) => p.id === productId);
+  const productIndexToUpdate = DUMMY_PRODUCTS.findIndex(
+    (p) => p.id === productId
+  );
+  if (!productToUpdate) {
+    return next(
+      new HttpError(`Could not find any product with id: ${productId}`)
+    );
+  }
+  const updatedProduct = {
+    ...productToUpdate,
+    ...propsChanges,
+  };
+  DUMMY_PRODUCTS[productIndexToUpdate] = updatedProduct;
+  res.json({ product: updatedProduct });
+};

@@ -12,11 +12,7 @@ productsRouter.delete('/', productsController.deleteProducts);
 
 productsRouter.get('/:pid', productsController.getProduct);
 
-productsRouter.patch('/:pid', (req, res, next) =>
-  res.json({
-    message: `update product with id: ${req.params.pid} and props updated: ${req.body}`,
-  })
-);
+productsRouter.patch('/:pid', productsController.updateProduct);
 
 productsRouter.delete('/:pid', (req, res, next) =>
   res.json({ message: `delete product with id: ${req.params.pid}` })
