@@ -6,9 +6,7 @@ const categoriesRouter = express.Router();
 
 categoriesRouter.get('/', categoriesController.getCategories);
 
-categoriesRouter.post('/', (req, res, next) =>
-  res.json({ message: 'create categorie' })
-);
+categoriesRouter.post('/', categoriesController.createCategory);
 
 categoriesRouter.delete('/:cid', (req, res, next) =>
   res.json({ message: `delete categorie with id: ${req.params.cid}` })
