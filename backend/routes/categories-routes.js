@@ -8,8 +8,6 @@ categoriesRouter.get('/', categoriesController.getCategories);
 
 categoriesRouter.post('/', categoriesController.createCategory);
 
-categoriesRouter.delete('/:cid', (req, res, next) =>
-  res.json({ message: `delete categorie with id: ${req.params.cid}` })
-);
+categoriesRouter.delete('/:cid', categoriesController.deleteCategory);
 
 export default categoriesRouter;
