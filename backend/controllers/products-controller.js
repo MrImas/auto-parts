@@ -1,4 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
+
+import HttpError from '../models/http-errors.js';
+
 let DUMMY_PRODUCTS = [
   {
     id: 'p1',
@@ -49,4 +52,15 @@ export const deleteProducts = (req, res, next) => {
   const productsDeleted = [...DUMMY_PRODUCTS];
   DUMMY_PRODUCTS = [];
   res.json({ products: productsDeleted });
+};
+
+export const getProduct = (req, res, next) => {
+  const productId = req.params.pid;
+  const product = DUMMY_PRODUCTS.find((p) => p.id === productId);
+  if (!product) {
+    return next(
+      new HttpError(`Could not find any product with id: ${productId}`)
+    );
+  }
+  res.json({ product });
 };
