@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
+import Product from '../models/product.js';
 import HttpError from '../models/http-errors.js';
 
 let DUMMY_PRODUCTS = [
@@ -33,19 +34,23 @@ export const getProducts = (req, res, next) => {
   res.json({ products: DUMMY_PRODUCTS });
 };
 
-export const createProduct = (req, res, next) => {
-  const { title, price, description, content, image, category } = req.body;
-  const createdProduct = {
-    id: uuidv4(),
+export const createProduct = async (req, res, next) => {
+  const { title, price, description, content, category } = req.body;
+  const createdProduct = new Product({
     title,
     price,
     description,
     content,
-    image,
+    image:
+      'https://static3.depositphotos.com/1003854/262/i/950/depositphotos_2622850-stock-photo-car-wheel-with-aluminum-rim.jpg',
     category,
-  };
-  DUMMY_PRODUCTS.push(createdProduct);
-  res.status(201).json({ product: createdProduct });
+  });
+  try {
+    await createdProduct.save();
+  } catch (err) {
+    return next(new HttpError('Could not add product, please try again.', 500));
+  }
+  res.status(201).json({ product: createdProduct.toObject({ getters: true }) });
 };
 
 export const deleteProducts = (req, res, next) => {
