@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
 
 import productsRouter from './routes/products-routes.js';
 import HttpError from './models/http-errors.js';
@@ -26,4 +27,10 @@ app.use((error, req, res, next) => {
   res.json(error.message || 'An Unknown error has occurred!');
 });
 
-app.listen(5000, () => console.log('server is listeining on port 5000'));
+mongoose
+  .connect(
+    'mongodb+srv://tester:tester123@cluster0.3naae.mongodb.net/autoParts?retryWrites=true&w=majority',
+    { useNewUrlParser: true }
+  )
+  .then(app.listen(5000, () => console.log('Server is listening on port 5000')))
+  .catch((err) => console.log(err));
