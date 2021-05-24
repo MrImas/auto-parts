@@ -91,25 +91,25 @@ export const createCategory = async (req, res, next) => {
     .json({ product: createdCategory.toObject({ getters: true }) });
 };
 
-export const deleteCategory = (req, res, next) => {
+export const deleteCategory = async (req, res, next) => {
   const categoryId = req.params.cid;
-  const categoryToDelete = DUMMY_CATEGORIES.find((c) => c.id === categoryId);
+  let categoryToDelete;
+  try {
+    categoryToDelete = await Category.findById(categoryId);
+  } catch (err) {
+    return next(new HttpError('Something went wrong, please try again.', 500));
+  }
   if (!categoryToDelete) {
     return next(
-      new HttpError(`Could not find any category with id: ${categoryId}`)
+      new HttpError('Category with the provided name was not found', 404)
     );
   }
-  const hasProductsOfCategoryToDelete = DUMMY_PRODUCTS.find(
-    (p) => p.category === categoryToDelete.name
-  );
-  if (hasProductsOfCategoryToDelete) {
+  try {
+    await categoryToDelete.remove();
+  } catch (err) {
     return next(
-      new HttpError(
-        `Could not delete category with id: ${categoryId}. You must delete all products of category ${categoryToDelete.name}`,
-        401
-      )
+      new HttpError('Could not delete category, please try again.', 500)
     );
   }
-  DUMMY_CATEGORIES = DUMMY_CATEGORIES.filter((c) => c.id !== categoryId);
-  res.json({ category: categoryToDelete });
+  res.json({ category: categoryToDelete.toObject({ getters: true }) });
 };
