@@ -46,25 +46,22 @@ const DUMMY_PRODUCTS = [
 ];
 
 export const getCategories = async (req, res, next) => {
-  res.json({ categories: DUMMY_CATEGORIES });
+  let categories;
+  try {
+    categories = await Category.find();
+  } catch (err) {
+    return next(new HttpError('Something went wrong, please try again.', 500));
+  }
+  if (!categories || categories.length === 0) {
+    return next(new HttpError('There are no categories found', 404));
+  }
+  res.json({
+    categories: categories.map((c) => c.toObject({ getters: true })),
+  });
 };
 
 export const createCategory = async (req, res, next) => {
   const { name } = req.body;
-  // const hasCategory = DUMMY_CATEGORIES.find((c) => c.name === name);
-  // if (hasCategory) {
-  //   return next(
-  //     new HttpError(
-  //       `Category named: ${name} already exists. Please enter a unique name`,
-  //       422
-  //     )
-  //   );
-  // }
-  // const createdCategory = {
-  //   id: uuidv4(),
-  //   name,
-  // };
-  // DUMMY_CATEGORIES.push(createdCategory);
   let hasCategory;
   try {
     hasCategory = await Category.findOne({ name });
