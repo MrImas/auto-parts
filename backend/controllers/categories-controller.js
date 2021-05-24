@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import HttpError from '../models/http-errors.js';
+import Category from '../models/category.js';
 
 let DUMMY_CATEGORIES = [
   {
@@ -44,27 +45,53 @@ const DUMMY_PRODUCTS = [
   },
 ];
 
-export const getCategories = (req, res, next) => {
+export const getCategories = async (req, res, next) => {
   res.json({ categories: DUMMY_CATEGORIES });
 };
 
-export const createCategory = (req, res, next) => {
+export const createCategory = async (req, res, next) => {
   const { name } = req.body;
-  const hasCategory = DUMMY_CATEGORIES.find((c) => c.name === name);
+  // const hasCategory = DUMMY_CATEGORIES.find((c) => c.name === name);
+  // if (hasCategory) {
+  //   return next(
+  //     new HttpError(
+  //       `Category named: ${name} already exists. Please enter a unique name`,
+  //       422
+  //     )
+  //   );
+  // }
+  // const createdCategory = {
+  //   id: uuidv4(),
+  //   name,
+  // };
+  // DUMMY_CATEGORIES.push(createdCategory);
+  let hasCategory;
+  try {
+    hasCategory = await Category.findOne({ name });
+  } catch (err) {
+    return next(new HttpError('Something went wrong, please try again.', 500));
+  }
   if (hasCategory) {
     return next(
       new HttpError(
-        `Category named: ${name} already exists. Please enter a unique name`,
+        'Category already exists, add only unique names of categories',
         422
       )
     );
   }
-  const createdCategory = {
-    id: uuidv4(),
+  const createdCategory = new Category({
     name,
-  };
-  DUMMY_CATEGORIES.push(createdCategory);
-  res.status(201).json({ product: createdCategory });
+  });
+  try {
+    await createdCategory.save();
+  } catch (err) {
+    return next(
+      new HttpError('Could not create category, please try again.', 500)
+    );
+  }
+  res
+    .status(201)
+    .json({ product: createdCategory.toObject({ getters: true }) });
 };
 
 export const deleteCategory = (req, res, next) => {
