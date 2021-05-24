@@ -70,24 +70,33 @@ export const getProduct = (req, res, next) => {
   res.json({ product });
 };
 
-export const updateProduct = (req, res, next) => {
+export const updateProduct = async (req, res, next) => {
   const productId = req.params.pid;
   const propsChanges = req.body;
-  const productToUpdate = DUMMY_PRODUCTS.find((p) => p.id === productId);
-  const productIndexToUpdate = DUMMY_PRODUCTS.findIndex(
-    (p) => p.id === productId
-  );
-  if (!productToUpdate) {
+  let productToUpdate;
+  try {
+    productToUpdate = await Product.findById(productId);
+  } catch (err) {
     return next(
-      new HttpError(`Could not find any product with id: ${productId}`)
+      new HttpError('Updating product faild, please try again.', 500)
     );
   }
-  const updatedProduct = {
-    ...productToUpdate,
-    ...propsChanges,
-  };
-  DUMMY_PRODUCTS[productIndexToUpdate] = updatedProduct;
-  res.json({ product: updatedProduct });
+  if (!productToUpdate) {
+    return next(
+      new HttpError('Could not find a product with the provided id.', 404)
+    );
+  }
+  for (let prop in propsChanges) {
+    productToUpdate[prop] = propsChanges[prop];
+  }
+  try {
+    await productToUpdate.save();
+  } catch (err) {
+    return next(
+      new HttpError('Updating product faild, please try again.', 500)
+    );
+  }
+  res.json({ product: productToUpdate.toObject({ getters: true }) });
 };
 
 export const deleteProduct = (req, res, next) => {
