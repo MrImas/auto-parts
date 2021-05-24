@@ -104,7 +104,7 @@ export const deleteProduct = async (req, res, next) => {
   const productId = req.params.pid;
   let product;
   try {
-    product = await Product.findById(productId);
+    product = await Product.findById(productId).populate('category');
   } catch (err) {
     return next(
       new HttpError('Could not fetch product with the provided id', 500)
@@ -116,7 +116,12 @@ export const deleteProduct = async (req, res, next) => {
     );
   }
   try {
-    await product.remove();
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    product.category.products.pull(product);
+    await product.category.save({ session: sess });
+    await product.remove({ session: sess });
+    sess.commitTransaction();
   } catch (err) {
     new HttpError('Could not delete product with the provided id', 500);
   }
