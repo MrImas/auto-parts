@@ -114,14 +114,25 @@ export const updateProduct = async (req, res, next) => {
   res.json({ product: productToUpdate.toObject({ getters: true }) });
 };
 
-export const deleteProduct = (req, res, next) => {
+export const deleteProduct = async (req, res, next) => {
   const productId = req.params.pid;
-  const productToDelete = DUMMY_PRODUCTS.find((p) => p.id === productId);
-  if (!productToDelete) {
+  let product;
+  try {
+    product = await Product.findById(productId);
+  } catch (err) {
+    return next(
+      new HttpError('Could not fetch product with the provided id', 500)
+    );
+  }
+  if (!product) {
     return next(
       new HttpError(`Could not find any product with id: ${productId}`)
     );
   }
-  DUMMY_PRODUCTS = DUMMY_PRODUCTS.filter((p) => p.id !== productId);
-  res.json({ product: productToDelete });
+  try {
+    await product.remove();
+  } catch (err) {
+    new HttpError('Could not delete product with the provided id', 500);
+  }
+  res.json({ product: product.toObject({ getters: true }) });
 };
