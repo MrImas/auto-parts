@@ -8,8 +8,6 @@ productsRouter.get('/', productsController.getProducts);
 
 productsRouter.post('/', productsController.createProduct);
 
-productsRouter.delete('/', productsController.deleteProducts);
-
 productsRouter.get('/:pid', productsController.getProduct);
 
 productsRouter.patch('/:pid', productsController.updateProduct);
