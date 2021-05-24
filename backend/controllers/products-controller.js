@@ -67,15 +67,18 @@ export const deleteProducts = (req, res, next) => {
   res.json({ products: productsDeleted });
 };
 
-export const getProduct = (req, res, next) => {
+export const getProduct = async (req, res, next) => {
   const productId = req.params.pid;
-  const product = DUMMY_PRODUCTS.find((p) => p.id === productId);
-  if (!product) {
-    return next(
-      new HttpError(`Could not find any product with id: ${productId}`)
-    );
+  let product;
+  try {
+    product = await Product.findById(productId);
+  } catch (err) {
+    new HttpError('Could not fetch product with the provided id', 500);
   }
-  res.json({ product });
+  if (!product) {
+    new HttpError(`Could not find any product with id: ${productId}`);
+  }
+  res.json({ product: product.toObject({ getters: true }) });
 };
 
 export const updateProduct = async (req, res, next) => {
