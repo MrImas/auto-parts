@@ -30,8 +30,16 @@ let DUMMY_PRODUCTS = [
   },
 ];
 
-export const getProducts = (req, res, next) => {
-  res.json({ products: DUMMY_PRODUCTS });
+export const getProducts = async (req, res, next) => {
+  let products;
+  try {
+    products = await Product.find();
+  } catch (err) {
+    return next(
+      new HttpError('Could not fetch products, please try again', 500)
+    );
+  }
+  res.json({ products: products.map((p) => p.toObject({ getters: true })) });
 };
 
 export const createProduct = async (req, res, next) => {
