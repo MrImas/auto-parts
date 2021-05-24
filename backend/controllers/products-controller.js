@@ -73,10 +73,14 @@ export const getProduct = async (req, res, next) => {
   try {
     product = await Product.findById(productId);
   } catch (err) {
-    new HttpError('Could not fetch product with the provided id', 500);
+    return next(
+      new HttpError('Could not fetch product with the provided id', 500)
+    );
   }
   if (!product) {
-    new HttpError(`Could not find any product with id: ${productId}`);
+    return next(
+      new HttpError(`Could not find any product with id: ${productId}`)
+    );
   }
   res.json({ product: product.toObject({ getters: true }) });
 };
