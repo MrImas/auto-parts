@@ -1,5 +1,8 @@
+import mongoose from 'mongoose';
+
 import Product from '../models/product.js';
 import HttpError from '../models/http-errors.js';
+import Category from '../models/category.js';
 
 export const getProducts = async (req, res, next) => {
   let products;
@@ -24,8 +27,25 @@ export const createProduct = async (req, res, next) => {
       'https://static3.depositphotos.com/1003854/262/i/950/depositphotos_2622850-stock-photo-car-wheel-with-aluminum-rim.jpg',
     category,
   });
+  let categoryOfProduct;
   try {
-    await createdProduct.save();
+    categoryOfProduct = await Category.findById(category);
+  } catch (err) {
+    return next(new HttpError('Could not add product, please try again.', 500));
+  }
+  if (!categoryOfProduct) {
+    return next(
+      new HttpError(`Could not find any category with the provided  id.`),
+      404
+    );
+  }
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await createdProduct.save({ session: sess });
+    categoryOfProduct.products.push(createdProduct);
+    await categoryOfProduct.save();
+    await sess.commitTransaction();
   } catch (err) {
     return next(new HttpError('Could not add product, please try again.', 500));
   }
@@ -44,7 +64,8 @@ export const getProduct = async (req, res, next) => {
   }
   if (!product) {
     return next(
-      new HttpError(`Could not find any product with id: ${productId}`)
+      new HttpError(`Could not find any product with id: ${productId}`),
+      404
     );
   }
   res.json({ product: product.toObject({ getters: true }) });
