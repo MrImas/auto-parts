@@ -34,6 +34,7 @@ export const createCategory = async (req, res, next) => {
   }
   const createdCategory = new Category({
     name,
+    products: [],
   });
   try {
     await createdCategory.save();
@@ -44,7 +45,7 @@ export const createCategory = async (req, res, next) => {
   }
   res
     .status(201)
-    .json({ product: createdCategory.toObject({ getters: true }) });
+    .json({ category: createdCategory.toObject({ getters: true }) });
 };
 
 export const deleteCategory = async (req, res, next) => {

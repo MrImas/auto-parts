@@ -76,7 +76,7 @@ export const updateProduct = async (req, res, next) => {
   const propsChanges = req.body;
   let productToUpdate;
   try {
-    productToUpdate = await Product.findById(productId);
+    productToUpdate = await Product.findById(productId).populate('category');
   } catch (err) {
     return next(
       new HttpError('Updating product faild, please try again.', 500)
@@ -88,9 +88,21 @@ export const updateProduct = async (req, res, next) => {
     );
   }
   for (let prop in propsChanges) {
-    productToUpdate[prop] = propsChanges[prop];
+    if (prop !== 'category') {
+      productToUpdate[prop] = propsChanges[prop];
+    }
   }
   try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    if ('category' in propsChanges) {
+      productToUpdate.category.products.pull(productToUpdate);
+      await productToUpdate.category.save();
+      const newCategory = await Category.findById(propsChanges['category']);
+      newCategory.products.push(productToUpdate);
+      await newCategory.save();
+      productToUpdate.category = newCategory;
+    }
     await productToUpdate.save();
   } catch (err) {
     return next(

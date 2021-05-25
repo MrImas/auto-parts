@@ -4,9 +4,7 @@ const Schema = mongoose.Schema;
 
 const categorySchema = new Schema({
   name: { type: String, required: true, unique: true },
-  products: [
-    { type: mongoose.Types.ObjectId, required: true, ref: 'Products' },
-  ],
+  products: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Place' }],
 });
 
 categorySchema.plugin(uniqueValidator);
