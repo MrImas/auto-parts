@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import User from '../models/user.js';
 
 import HttpError from '../models/http-errors.js';
 
@@ -10,20 +11,33 @@ const DUMMY_USERS = [
     password: 'test',
   },
 ];
-export const signup = (req, res, next) => {
+export const signup = async (req, res, next) => {
   const { name, email, password } = req.body;
-  const hasUser = DUMMY_USERS.find((u) => u.email === email);
-  if (hasUser) {
-    return next(new HttpError(`Email ${email} already exists.`, 422));
+  let isUserSignedUp;
+  try {
+    isUserSignedUp = await User.findOne({ email });
+  } catch (err) {
+    return next(new HttpError('Something went wrong, please try again', 500));
   }
-  const newUser = {
-    id: uuidv4(),
+  if (isUserSignedUp) {
+    return next(
+      new HttpError(
+        `Email ${email} already exists in the system, please try to log in.`,
+        422
+      )
+    );
+  }
+  const newUser = new User({
     name,
     email,
     password,
-  };
-  DUMMY_USERS.push(newUser);
-  res.status(201).json({ user: newUser });
+  });
+  try {
+    await newUser.save();
+  } catch (err) {
+    return next(new HttpError('Could not sign you up, please try again.', 500));
+  }
+  res.status(201).json({ user: newUser.toObject({ getters: true }) });
 };
 
 export const login = (req, res, next) => {
