@@ -1,16 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
 import User from '../models/user.js';
 
 import HttpError from '../models/http-errors.js';
 
-const DUMMY_USERS = [
-  {
-    id: 'u1',
-    name: 'Itzik',
-    email: 'test@test.com',
-    password: 'test',
-  },
-];
 export const signup = async (req, res, next) => {
   const { name, email, password } = req.body;
   let isUserSignedUp;
