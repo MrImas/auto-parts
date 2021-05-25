@@ -40,10 +40,15 @@ export const signup = async (req, res, next) => {
   res.status(201).json({ user: newUser.toObject({ getters: true }) });
 };
 
-export const login = (req, res, next) => {
+export const login = async (req, res, next) => {
   const { email, password } = req.body;
-  const hasUser = DUMMY_USERS.find((u) => u.email === email);
-  if (!hasUser || hasUser.password !== password) {
+  let existingUser;
+  try {
+    existingUser = await User.findOne({ email });
+  } catch (err) {
+    return next(new HttpError('Could not log you in, please try again.', 500));
+  }
+  if (!existingUser || existingUser.password !== password) {
     return next(
       new HttpError(
         'Could not identify user, credentials seem to be wrong',
