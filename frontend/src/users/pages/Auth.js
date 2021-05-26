@@ -49,10 +49,32 @@ export const Auth = () => {
     setIsLoginMode((prevMode) => !prevMode);
   };
 
-  const onSubmitHandler = (event) => {
+  const onSubmitHandler = async (event) => {
     event.preventDefault();
     console.log(authFormState.inputs);
-    auth.login();
+    if (isLoginMode) {
+    } else {
+      try {
+        const response = await fetch(`http://localhost:5000/api/users/signup`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: authFormState.inputs.name.value,
+            email: authFormState.inputs.email.value,
+            password: authFormState.inputs.password.value,
+          }),
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+          throw new Error(responseData.message);
+        }
+        auth.login();
+      } catch (err) {
+        console.log(err.message || 'Unknown error occured :(');
+      }
+    }
   };
 
   return (
