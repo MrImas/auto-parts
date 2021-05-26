@@ -11,6 +11,16 @@ const app = express();
 
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Request-With, Content-Type, Accept, Authorization'
+  );
+  next();
+});
+
 app.use('/api/products', productsRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/users', usersRouter);
