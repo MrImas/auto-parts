@@ -11,8 +11,20 @@ export const Categories = () => {
   const [isLoading, error, sendHttpRequest, clearError] = useHttpClient();
   const [categories, setCategories] = useState([]);
 
-  const addCategoryHandler = (categoryName) => {
-    setCategories([...categories, { name: categoryName.trim() }]);
+  const addCategoryHandler = async (categoryName) => {
+    try {
+      await sendHttpRequest(
+        'http://localhost:5000/api/categories',
+        'POST',
+        {
+          'Content-Type': 'application/json',
+        },
+        JSON.stringify({
+          name: categoryName,
+        })
+      );
+      setCategories([...categories, { name: categoryName.trim() }]);
+    } catch (err) {}
   };
 
   const deleteCategoryHandler = (categoryName) => {
@@ -37,7 +49,7 @@ export const Categories = () => {
     <>
       {error && <ErrorModal error={error} clearError={clearError} />}
       {isLoading && <LoadingSpinner />}
-      {!isLoading && categories && (
+      {categories && (
         <div className='categories'>
           <AddCategory categories={categories} onAdd={addCategoryHandler} />
           <CategoryList items={categories} onDelete={deleteCategoryHandler} />

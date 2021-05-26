@@ -29,7 +29,6 @@ export const AddCategory = (props) => {
     value: '',
     isValid: false,
   });
-  const [isLoading, error, sendHttpRequest, clearError] = useHttpClient();
 
   const inputHandler = useCallback(
     (id, categoryVal, isValid) => {
@@ -43,49 +42,33 @@ export const AddCategory = (props) => {
     [props.categories]
   );
 
-  const onSubmitHandler = async (event) => {
+  const onSubmitHandler = (event) => {
     event.preventDefault();
-    try {
-      await sendHttpRequest(
-        'http://localhost:5000/api/categories',
-        'POST',
-        {
-          'Content-Type': 'application/json',
-        },
-        JSON.stringify({
-          name: addCategoryState.value,
-        })
-      );
-      props.onAdd(addCategoryState.value);
-    } catch (err) {}
+    props.onAdd(addCategoryState.value);
   };
 
   return (
-    <>
-      {error && <ErrorModal error={error} clearError={clearError} />}
-      {isLoading && <LoadingSpinner />}
-      <div className='add-category'>
-        <Typography variant='h6'>CATEGORY</Typography>
-        <form className='category-form' onSubmit={onSubmitHandler}>
-          <Input
-            id='category'
-            onInput={inputHandler}
-            validators={[VALIDATOR_REQUIRE()]}
-            errorText={'Please enter a category name. The name must be unique.'}
-            isValid={addCategoryState.isValid}
-            initialValue={addCategoryState.value}
-          />
-          <Button
-            disabled={!addCategoryState.isValid}
-            type='submit'
-            variant='contained'
-            size='large'
-            color='secondary'
-          >
-            ADD
-          </Button>
-        </form>
-      </div>
-    </>
+    <div className='add-category'>
+      <Typography variant='h6'>CATEGORY</Typography>
+      <form className='category-form' onSubmit={onSubmitHandler}>
+        <Input
+          id='category'
+          onInput={inputHandler}
+          validators={[VALIDATOR_REQUIRE()]}
+          errorText={'Please enter a category name. The name must be unique.'}
+          isValid={addCategoryState.isValid}
+          initialValue={addCategoryState.value}
+        />
+        <Button
+          disabled={!addCategoryState.isValid}
+          type='submit'
+          variant='contained'
+          size='large'
+          color='secondary'
+        >
+          ADD
+        </Button>
+      </form>
+    </div>
   );
 };
