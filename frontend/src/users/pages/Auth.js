@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Card } from '@material-ui/core';
 
+import { useHttpClient } from '../../shared/hooks/http-hook';
 import { useForm } from '../../shared/hooks/product-form-hook';
 import Button from '../../shared/components/FormElements/Button';
 import Input from '../../shared/components/FormElements/Input';
@@ -26,8 +27,7 @@ export const Auth = () => {
     },
   });
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
+  const [isLoading, error, sendHttpRequest, clearError] = useHttpClient();
 
   const auth = useContext(AuthContext);
 
@@ -56,64 +56,47 @@ export const Auth = () => {
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     console.log(authFormState.inputs);
-    setIsLoading(true);
     if (isLoginMode) {
       try {
-        const response = await fetch(`http://localhost:5000/api/users/login`, {
-          method: 'POST',
-          headers: {
+        const response = await sendHttpRequest(
+          `http://localhost:5000/api/users/login`,
+          'POST',
+          {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
+          JSON.stringify({
             email: authFormState.inputs.email.value,
             password: authFormState.inputs.password.value,
-          }),
-        });
-        const responseData = await response.json();
-        if (!response.ok) {
-          throw new Error(responseData.message);
+          })
+        );
+        if (response) {
+          auth.login();
         }
-        setIsLoading(false);
-        auth.login();
-      } catch (err) {
-        setIsLoading(false);
-        console.log(err.message || 'Unknown error occured :(');
-        setError(err.message);
-      }
+      } catch (err) {}
     } else {
       try {
-        const response = await fetch(`http://localhost:5000/api/users/signup`, {
-          method: 'POST',
-          headers: {
+        const response = await sendHttpRequest(
+          'http://localhost:5000/api/users/signup',
+          'POST',
+          {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
+          JSON.stringify({
             name: authFormState.inputs.name.value,
             email: authFormState.inputs.email.value,
             password: authFormState.inputs.password.value,
-          }),
-        });
-        const responseData = await response.json();
-        if (!response.ok) {
-          throw new Error(responseData.message);
+          })
+        );
+        if (response) {
+          auth.login();
         }
-        setIsLoading(false);
-        auth.login();
-      } catch (err) {
-        setIsLoading(false);
-        console.log(err.message || 'Unknown error occured :(');
-        setError(err.message);
-      }
+      } catch (err) {}
     }
-  };
-
-  const errorHandler = () => {
-    setError(null);
   };
 
   return (
     <>
-      {error && <ErrorModal error={error} clearError={errorHandler} />}
+      {error && <ErrorModal error={error} clearError={clearError} />}
       <Card>
         {isLoading && <LoadingSpinner />}
         <form className='authentication-form' onSubmit={onSubmitHandler}>
