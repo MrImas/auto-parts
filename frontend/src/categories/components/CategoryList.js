@@ -8,7 +8,8 @@ export const CategoryList = (props) => {
     <ul className='category-list'>
       {props.items.map((category) => (
         <CategoryItem
-          key={category.name}
+          key={category.id}
+          id={category.id}
           name={category.name}
           onDelete={props.onDelete}
         />

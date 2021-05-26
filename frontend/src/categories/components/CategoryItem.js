@@ -28,7 +28,7 @@ export const CategoryItem = (props) => {
         </CardContent>
         <CardActions>
           <Button
-            onClick={() => props.onDelete(props.name)}
+            onClick={() => props.onDelete(props.id)}
             variant='contained'
             size='large'
             color='secondary'

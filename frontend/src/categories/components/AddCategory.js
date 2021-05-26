@@ -1,12 +1,9 @@
 import React, { useReducer, useCallback } from 'react';
 import { Button, Typography } from '@material-ui/core';
 
-import { useHttpClient } from '../../shared/hooks/http-hook';
 import { VALIDATOR_REQUIRE } from '../../shared/util/validation';
 import Input from '../../shared/components/FormElements/Input';
 import './AddCategory.css';
-import { ErrorModal } from '../../shared/components/UIElements/ErrorModal';
-import { LoadingSpinner } from '../../shared/components/UIElements/LoadingSpinner';
 
 const addCategoryReducer = (state, action) => {
   switch (action.type) {

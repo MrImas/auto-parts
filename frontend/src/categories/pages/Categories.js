@@ -13,7 +13,7 @@ export const Categories = () => {
 
   const addCategoryHandler = async (categoryName) => {
     try {
-      await sendHttpRequest(
+      const responseData = await sendHttpRequest(
         'http://localhost:5000/api/categories',
         'POST',
         {
@@ -23,14 +23,20 @@ export const Categories = () => {
           name: categoryName,
         })
       );
-      setCategories([...categories, { name: categoryName.trim() }]);
+      setCategories([...categories, responseData.category]);
     } catch (err) {}
   };
 
-  const deleteCategoryHandler = (categoryName) => {
-    setCategories(
-      categories.filter((category) => category.name !== categoryName)
-    );
+  const deleteCategoryHandler = async (categoryId) => {
+    try {
+      await sendHttpRequest(
+        `http://localhost:5000/api/categories/${categoryId}`,
+        'DELETE'
+      );
+      setCategories(
+        categories.filter((category) => category.id !== categoryId)
+      );
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -48,9 +54,9 @@ export const Categories = () => {
   return (
     <>
       {error && <ErrorModal error={error} clearError={clearError} />}
-      {isLoading && <LoadingSpinner />}
       {categories && (
         <div className='categories'>
+          {isLoading && <LoadingSpinner />}
           <AddCategory categories={categories} onAdd={addCategoryHandler} />
           <CategoryList items={categories} onDelete={deleteCategoryHandler} />
         </div>
