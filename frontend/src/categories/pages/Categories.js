@@ -9,7 +9,7 @@ import './Categories.css';
 
 export const Categories = () => {
   const [isLoading, error, sendHttpRequest, clearError] = useHttpClient();
-  const [categories, setCategories] = useState();
+  const [categories, setCategories] = useState([]);
 
   const addCategoryHandler = (categoryName) => {
     setCategories([...categories, { name: categoryName.trim() }]);
