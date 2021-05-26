@@ -12,6 +12,7 @@ import {
 import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
 import { LoadingSpinner } from '../../shared/components/UIElements/LoadingSpinner';
+import { ErrorModal } from '../../shared/components/UIElements/ErrorModal';
 
 export const Auth = () => {
   const [authFormState, inputHandler, setDataHandler] = useForm({
@@ -26,6 +27,7 @@ export const Auth = () => {
   });
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
 
   const auth = useContext(AuthContext);
 
@@ -74,7 +76,9 @@ export const Auth = () => {
         setIsLoading(false);
         auth.login();
       } catch (err) {
+        setIsLoading(false);
         console.log(err.message || 'Unknown error occured :(');
+        setError(err.message);
       }
     } else {
       try {
@@ -96,47 +100,56 @@ export const Auth = () => {
         setIsLoading(false);
         auth.login();
       } catch (err) {
+        setIsLoading(false);
         console.log(err.message || 'Unknown error occured :(');
+        setError(err.message);
       }
     }
   };
 
+  const errorHandler = () => {
+    setError(null);
+  };
+
   return (
-    <Card>
-      {isLoading && <LoadingSpinner />}
-      <form className='authentication-form' onSubmit={onSubmitHandler}>
-        <h2>LOGIN</h2>
-        <hr />
-        {!isLoginMode && (
+    <>
+      {error && <ErrorModal error={error} clearError={errorHandler} />}
+      <Card>
+        {isLoading && <LoadingSpinner />}
+        <form className='authentication-form' onSubmit={onSubmitHandler}>
+          <h2>LOGIN</h2>
+          <hr />
+          {!isLoginMode && (
+            <Input
+              id='name'
+              label='Name'
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText='Please enter a valid name'
+              onInput={inputHandler}
+            />
+          )}
           <Input
-            id='name'
-            label='Name'
-            validators={[VALIDATOR_REQUIRE()]}
-            errorText='Please enter a valid name'
+            id='email'
+            label='Email'
+            validators={[VALIDATOR_EMAIL()]}
+            errorText='Please enter a valid email address'
             onInput={inputHandler}
           />
-        )}
-        <Input
-          id='email'
-          label='Email'
-          validators={[VALIDATOR_EMAIL()]}
-          errorText='Please enter a valid email address'
-          onInput={inputHandler}
-        />
-        <Input
-          id='password'
-          label='Password'
-          validators={[VALIDATOR_MINLENGTH(4)]}
-          errorText='Please enter a valid password of at least 4 characters'
-          onInput={inputHandler}
-        />
-        <Button type='submit' disabled={!authFormState.isValid}>
-          LOGIN
+          <Input
+            id='password'
+            label='Password'
+            validators={[VALIDATOR_MINLENGTH(4)]}
+            errorText='Please enter a valid password of at least 4 characters'
+            onInput={inputHandler}
+          />
+          <Button type='submit' disabled={!authFormState.isValid}>
+            LOGIN
+          </Button>
+        </form>
+        <Button onClick={changeLoginModeHandler}>
+          SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}
         </Button>
-      </form>
-      <Button onClick={changeLoginModeHandler}>
-        SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}
-      </Button>
-    </Card>
+      </Card>
+    </>
   );
 };

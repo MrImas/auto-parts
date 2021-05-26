@@ -7,6 +7,7 @@ export const ErrorModal = (props) => {
     <Modal
       open={Boolean(props.error)}
       onClose={props.clearError}
+      onClickOk={props.clearError}
       title='Error Has Occured... :('
     >
       {props.error}
