@@ -44,9 +44,11 @@ export const NavLinks = () => {
           </NavLink>
         </li>
       )}
-      <li>
-        <Button onClick={auth.logout}>LOGOUT</Button>
-      </li>
+      {auth.isLoggedIn && (
+        <li>
+          <Button onClick={auth.logout}>LOGOUT</Button>
+        </li>
+      )}
       <li>
         <NavLink to='/' exact>
           <IconButton>
