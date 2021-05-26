@@ -11,6 +11,7 @@ import {
 } from '../../shared/util/validation';
 import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
+import { LoadingSpinner } from '../../shared/components/UIElements/LoadingSpinner';
 
 export const Auth = () => {
   const [authFormState, inputHandler, setDataHandler] = useForm({
@@ -24,6 +25,7 @@ export const Auth = () => {
     },
   });
   const [isLoginMode, setIsLoginMode] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const auth = useContext(AuthContext);
 
@@ -52,6 +54,7 @@ export const Auth = () => {
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     console.log(authFormState.inputs);
+    setIsLoading(true);
     if (isLoginMode) {
       try {
         const response = await fetch(`http://localhost:5000/api/users/login`, {
@@ -68,6 +71,7 @@ export const Auth = () => {
         if (!response.ok) {
           throw new Error(responseData.message);
         }
+        setIsLoading(false);
         auth.login();
       } catch (err) {
         console.log(err.message || 'Unknown error occured :(');
@@ -89,6 +93,7 @@ export const Auth = () => {
         if (!response.ok) {
           throw new Error(responseData.message);
         }
+        setIsLoading(false);
         auth.login();
       } catch (err) {
         console.log(err.message || 'Unknown error occured :(');
@@ -98,6 +103,7 @@ export const Auth = () => {
 
   return (
     <Card>
+      {isLoading && <LoadingSpinner />}
       <form className='authentication-form' onSubmit={onSubmitHandler}>
         <h2>LOGIN</h2>
         <hr />
