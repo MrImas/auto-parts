@@ -143,7 +143,7 @@ export const Auth = () => {
             onInput={inputHandler}
           />
           <Button type='submit' disabled={!authFormState.isValid}>
-            LOGIN
+            {isLoginMode ? 'LOGIN' : 'SIGNUP'}
           </Button>
         </form>
         <Button onClick={changeLoginModeHandler}>
