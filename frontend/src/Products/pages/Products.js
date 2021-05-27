@@ -1,37 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { ErrorModal } from '../../shared/components/UIElements/ErrorModal';
+import { LoadingSpinner } from '../../shared/components/UIElements/LoadingSpinner';
+
+import { useHttpClient } from '../../shared/hooks/http-hook';
 import { ProductList } from '../components/ProductList';
 
-const DUMMY_PRODUCTS = [
-  {
-    id: 'p1',
-    title: 'Wheel',
-    price: 10,
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.',
-    content: `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod`,
-    image:
-      'https://static3.depositphotos.com/1003854/262/i/950/depositphotos_2622850-stock-photo-car-wheel-with-aluminum-rim.jpg',
-    category: 'category 1',
-  },
-  {
-    id: 'p2',
-    title: 'Car Battery',
-    price: 35,
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.',
-    content: `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod`,
-    image:
-      'https://media.tractorsupply.com/is/image/TractorSupplyCompany/1323449?$456$',
-    category: 'category 2',
-  },
-];
-
 export const Products = () => {
+  const [isLoading, error, sendHttpRequest, clearError] = useHttpClient();
+  const [loadedProducts, setLoadedProducts] = useState();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const responseData = await sendHttpRequest(
+          'http://localhost:5000/api/products'
+        );
+        setLoadedProducts(responseData.products);
+      } catch (err) {}
+    };
+    fetchProducts();
+  }, [sendHttpRequest]);
+
   return (
-    <div>
-      <ProductList items={DUMMY_PRODUCTS} />
-    </div>
+    <>
+      {error && <ErrorModal error={error} clearError={clearError} />}
+      <div>
+        {isLoading && <LoadingSpinner />}
+        {loadedProducts && <ProductList items={loadedProducts} />}
+      </div>
+    </>
   );
 };
