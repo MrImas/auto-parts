@@ -1,7 +1,23 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const ButtonCustomized = (props) => {
+  if (props.to) {
+    return (
+      <Button
+        color={props.color || 'secondary'}
+        component={Link}
+        size={props.size || 'large'}
+        variant={props.variant || 'contained'}
+        disabled={props.disabled || false}
+        to={props.to}
+        exact={props.exact}
+      >
+        {props.children}
+      </Button>
+    );
+  }
   return (
     <Button
       disabled={props.disabled || false}

@@ -7,9 +7,10 @@ import {
   CardContent,
   CardActions,
   Typography,
-  Button,
+  // Button,
 } from '@material-ui/core';
 
+import Button from '../../shared/components/FormElements/Button';
 import './ProductItem.css';
 
 const useStyles = makeStyles({
@@ -49,10 +50,11 @@ export const ProductItem = (props) => {
           <Button
             className={classes.actionButton}
             variant='contained'
+            to={`products/${props.id}`}
             size='large'
             color='primary'
           >
-            BUY
+            EDIT
           </Button>
           <Button
             className={classes.actionButton}
@@ -60,7 +62,7 @@ export const ProductItem = (props) => {
             size='large'
             color='secondary'
           >
-            VIEW
+            DELETE
           </Button>
         </CardActions>
       </Card>

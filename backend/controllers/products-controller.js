@@ -104,6 +104,7 @@ export const updateProduct = async (req, res, next) => {
       productToUpdate.category = newCategory;
     }
     await productToUpdate.save();
+    sess.commitTransaction();
   } catch (err) {
     return next(
       new HttpError('Updating product faild, please try again.', 500)
