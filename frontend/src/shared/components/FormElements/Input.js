@@ -76,7 +76,7 @@ const InputCustomized = (props) => {
         >
           <MenuItem value=''>Please Select Category</MenuItem>
           {props.selectItems.map((selectItem) => (
-            <MenuItem key={selectItem} value={selectItem.id}>
+            <MenuItem key={selectItem.id} value={selectItem.id}>
               {selectItem.name}
             </MenuItem>
           ))}

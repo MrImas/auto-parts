@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
+import CloseIcon from '@material-ui/icons/Close';
 
 import Button from './Button';
+import './ImageUpload.css';
 
 export const ImageUpload = (props) => {
   const inputRef = useRef();
@@ -12,20 +14,23 @@ export const ImageUpload = (props) => {
     if (file) {
       try {
         const fileReader = new FileReader();
-        fileReader.onload((err) => setPreviewURL(fileReader.result));
+        fileReader.onload = () => {
+          setPreviewURL(fileReader.result);
+        };
         fileReader.readAsDataURL(file);
       } catch (err) {}
     } else {
       setFile();
       setPreviewURL();
     }
-  }, [props.onInput, props.id, file]);
+  }, [file]);
 
   const imagePickedHandler = (event) => {
     let image;
     let isValidImage = false;
     if (event.target.files && event.target.files.length === 1) {
       image = event.target.files[0];
+      console.log(image);
       isValidImage = true;
       setFile(image);
     } else {
@@ -41,8 +46,13 @@ export const ImageUpload = (props) => {
 
   return (
     <div>
-      <div>
+      <div className='image-upload__preview'>
+        {previewURL && fileIsValid && <CloseIcon className='close-img-btn' />}
         {previewURL && fileIsValid && <img src={previewURL} alt='preview' />}
+        {/* {!previewURL && <p>{props.errorText}</p>} */}
+        {!previewURL && (
+          <Button onClick={imageUploadHandler}>Upload Image</Button>
+        )}
       </div>
       <input
         id={props.id}
@@ -52,7 +62,6 @@ export const ImageUpload = (props) => {
         style={{ display: 'none' }}
         onChange={imagePickedHandler}
       />
-      <Button onClick={imageUploadHandler}>Upload Image</Button>
     </div>
   );
 };
