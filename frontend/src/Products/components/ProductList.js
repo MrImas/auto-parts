@@ -16,6 +16,7 @@ export const ProductList = (props) => {
           content={product.content}
           image={product.image}
           category={product.category}
+          onDelete={props.onDelete}
         />
       ))}
     </ul>

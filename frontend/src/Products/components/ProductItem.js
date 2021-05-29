@@ -61,6 +61,7 @@ export const ProductItem = (props) => {
             variant='contained'
             size='large'
             color='secondary'
+            onClick={() => props.onDelete(props.id)}
           >
             DELETE
           </Button>

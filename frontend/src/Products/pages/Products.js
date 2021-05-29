@@ -21,12 +21,26 @@ export const Products = () => {
     fetchProducts();
   }, [sendHttpRequest]);
 
+  const deleteProductHandler = async (pid) => {
+    try {
+      await sendHttpRequest(
+        `http://localhost:5000/api/products/${pid}`,
+        'DELETE'
+      );
+      setLoadedProducts((prevProducts) =>
+        prevProducts.filter((p) => p.id !== pid)
+      );
+    } catch (err) {}
+  };
+
   return (
     <>
       {error && <ErrorModal error={error} clearError={clearError} />}
       <div>
         {isLoading && <LoadingSpinner />}
-        {loadedProducts && <ProductList items={loadedProducts} />}
+        {loadedProducts && (
+          <ProductList items={loadedProducts} onDelete={deleteProductHandler} />
+        )}
       </div>
     </>
   );
