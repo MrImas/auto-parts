@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import path from 'path';
+import fs from 'fs';
 
 import productsRouter from './routes/products-routes.js';
 import HttpError from './models/http-errors.js';
@@ -33,6 +34,9 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
+  if (req.file) {
+    fs.unlink(req.file.path, (err) => console.log(err));
+  }
   if (res.headersSent) {
     next(error);
   }
