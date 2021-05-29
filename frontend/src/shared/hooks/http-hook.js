@@ -1,17 +1,21 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 export const useHttpClient = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
+  const activeHttpRequests = useRef([]);
 
   const sendHttpRequest = useCallback(
     async (url, method = 'GET', headers = {}, body = null) => {
       setIsLoading(true);
+      const abortController = new AbortController();
+      activeHttpRequests.current.push(abortController);
       try {
         const response = await fetch(url, {
           method,
           headers,
           body,
+          signal: abortController.signal,
         });
         const responseData = await response.json();
         if (!response.ok) {
@@ -26,6 +30,14 @@ export const useHttpClient = () => {
     },
     []
   );
+
+  useEffect(() => {
+    return () => {
+      activeHttpRequests.current.forEach((abortController) =>
+        abortController.abort()
+      );
+    };
+  }, []);
 
   const clearError = useCallback(() => {
     setError(null);
