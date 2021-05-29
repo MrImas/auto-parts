@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import fs from 'fs';
 
 import Product from '../models/product.js';
 import HttpError from '../models/http-errors.js';
@@ -127,6 +128,7 @@ export const deleteProduct = async (req, res, next) => {
       new HttpError(`Could not find any product with id: ${productId}`)
     );
   }
+  const imagePath = product.image;
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
@@ -137,5 +139,6 @@ export const deleteProduct = async (req, res, next) => {
   } catch (err) {
     new HttpError('Could not delete product with the provided id', 500);
   }
+  fs.unlink(imagePath, (err) => console.log(err));
   res.json({ product: product.toObject({ getters: true }) });
 };
