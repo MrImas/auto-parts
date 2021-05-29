@@ -34,8 +34,9 @@ export const ProductItem = (props) => {
       <Card>
         <CardActionArea>
           <CardMedia
+            component='img'
             className={classes.image}
-            image={props.image}
+            image={`http://localhost:5000/${props.image}`}
             title={props.title}
           />
         </CardActionArea>

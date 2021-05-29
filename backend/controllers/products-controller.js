@@ -23,8 +23,7 @@ export const createProduct = async (req, res, next) => {
     price,
     description,
     content,
-    image:
-      'https://static3.depositphotos.com/1003854/262/i/950/depositphotos_2622850-stock-photo-car-wheel-with-aluminum-rim.jpg',
+    image: req.file.path,
     category,
   });
   let categoryOfProduct;

@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import path from 'path';
 
 import productsRouter from './routes/products-routes.js';
 import HttpError from './models/http-errors.js';
@@ -21,6 +22,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/uploads/images', express.static(path.join('uploads', 'images')));
+
 app.use('/api/products', productsRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/users', usersRouter);
@@ -34,7 +37,7 @@ app.use((error, req, res, next) => {
     next(error);
   }
   res.status(error.code || 500);
-  res.json({message: error.message || 'An Unknown error has occurred!'});
+  res.json({ message: error.message || 'An Unknown error has occurred!' });
 });
 
 mongoose
