@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 import User from '../models/user.js';
 import HttpError from '../models/http-errors.js';
@@ -39,7 +40,19 @@ export const signup = async (req, res, next) => {
   } catch (err) {
     return next(new HttpError('Could not sign you up, please try again.', 500));
   }
-  res.status(201).json({ user: newUser.toObject({ getters: true }) });
+
+  let token;
+  try {
+    token = jwt.sign({ userId: newUser.id }, 'private_secret_dont_share', {
+      expiresIn: '1h',
+    });
+  } catch (err) {
+    return next(
+      new HttpError('Signing up failed, please try again later.', 500)
+    );
+  }
+
+  res.status(201).json({ userId: newUser.id, token });
 };
 
 export const login = async (req, res, next) => {
@@ -73,5 +86,16 @@ export const login = async (req, res, next) => {
     );
   }
 
-  res.json({ message: 'user logged in' });
+  let token;
+  try {
+    token = jwt.sign({ userId: existingUser.id }, 'private_secret_dont_share', {
+      expiresIn: '1h',
+    });
+  } catch (err) {
+    return next(
+      new HttpError('Logging in failed, please try again later.', 500)
+    );
+  }
+
+  res.json({ message: 'user logged in', userId: existingUser.id, token });
 };
