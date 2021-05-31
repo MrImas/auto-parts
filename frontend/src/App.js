@@ -14,20 +14,30 @@ import { UpdateProduct } from './Products/pages/UpdateProduct';
 import { MainNavigation } from './shared/components/Navigation/MainNavigation';
 import { Auth } from './users/pages/Auth';
 
+let logoutTimer;
+
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState();
+  const [expirationDate, setExpirationDate] = useState();
   const [isAdmin, setIsAdmin] = useState(false);
   const [token, setToken] = useState();
 
-  const login = useCallback((uid, token, isAdmin) => {
+  const login = useCallback((uid, token, isAdmin, expireIn) => {
     setIsLoggedIn(true);
     setUserId(uid);
     setIsAdmin(isAdmin);
     setToken(token);
+    const expirationDate = expireIn || new Date(new Date().getTime() + 2000);
+    setExpirationDate(expirationDate);
     localStorage.setItem(
       'userData',
-      JSON.stringify({ userId: uid, token, isAdmin })
+      JSON.stringify({
+        userId: uid,
+        token,
+        isAdmin,
+        expirationDate: expirationDate.toISOString(),
+      })
     );
   }, []);
 
@@ -36,15 +46,35 @@ const App = () => {
     setIsAdmin(false);
     setUserId(null);
     setToken(false);
+    setExpirationDate(null);
     localStorage.removeItem('userData');
   }, []);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
-    if (userData && userData.token && userData.userId) {
-      login(userData.userId, userData.token, userData.isAdmin);
+    if (
+      userData &&
+      userData.token &&
+      userData.userId &&
+      userData.expirationDate
+    ) {
+      login(
+        userData.userId,
+        userData.token,
+        userData.isAdmin,
+        new Date(userData.expirationDate)
+      );
     }
   }, [login]);
+
+  useEffect(() => {
+    if (token && expirationDate) {
+      const remainingTime = expirationDate.getTime() - new Date().getTime();
+      logoutTimer = setTimeout(logout, remainingTime);
+    } else {
+      clearTimeout(logoutTimer);
+    }
+  }, [token, expirationDate, logout]);
 
   let routes;
 
