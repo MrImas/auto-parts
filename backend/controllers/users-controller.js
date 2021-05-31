@@ -50,13 +50,28 @@ export const login = async (req, res, next) => {
   } catch (err) {
     return next(new HttpError('Could not log you in, please try again.', 500));
   }
-  if (!existingUser || existingUser.password !== password) {
+  if (!existingUser) {
     return next(
       new HttpError(
         'Could not identify user, credentials seem to be wrong',
-        401
+        403
       )
     );
   }
+  let isValidPassword;
+  try {
+    isValidPassword = await bcrypt.compare(password, existingUser.password);
+  } catch (err) {
+    return next(new HttpError('Could not login, please try again', 500));
+  }
+  if (!isValidPassword) {
+    return next(
+      new HttpError(
+        'Could not identify user, credentials seem to be wrong',
+        403
+      )
+    );
+  }
+
   res.json({ message: 'user logged in' });
 };
