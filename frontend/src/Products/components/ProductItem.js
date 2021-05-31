@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Card,
@@ -7,9 +7,9 @@ import {
   CardContent,
   CardActions,
   Typography,
-  // Button,
 } from '@material-ui/core';
 
+import { AuthContext } from '../../shared/context/auth-context';
 import Button from '../../shared/components/FormElements/Button';
 import './ProductItem.css';
 
@@ -29,6 +29,7 @@ const useStyles = makeStyles({
 
 export const ProductItem = (props) => {
   const classes = useStyles();
+  const auth = useContext(AuthContext);
   return (
     <li className='product-item'>
       <Card>
@@ -55,7 +56,7 @@ export const ProductItem = (props) => {
             size='large'
             color='primary'
           >
-            EDIT
+            {auth.isAdmin ? 'EDIT' : 'VIEW'}
           </Button>
           <Button
             className={classes.actionButton}
@@ -64,7 +65,7 @@ export const ProductItem = (props) => {
             color='secondary'
             onClick={() => props.onDelete(props.id)}
           >
-            DELETE
+            {auth.isAdmin ? 'DELETE' : 'BUY'}
           </Button>
         </CardActions>
       </Card>

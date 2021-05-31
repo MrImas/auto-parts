@@ -44,7 +44,7 @@ const App = () => {
           <CreateProduct />
         </Route>
         <Route path='/products/:productId' exact>
-          <UpdateProduct />
+          {isAdmin ? <UpdateProduct /> : null}
         </Route>
         <Redirect to='/' />
       </Switch>
