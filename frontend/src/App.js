@@ -28,7 +28,8 @@ const App = () => {
     setUserId(uid);
     setIsAdmin(isAdmin);
     setToken(token);
-    const expirationDate = expireIn || new Date(new Date().getTime() + 2000);
+    const expirationDate =
+      expireIn || new Date(new Date().getTime() + 1000 * 60 * 60);
     setExpirationDate(expirationDate);
     localStorage.setItem(
       'userData',
