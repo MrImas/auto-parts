@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Card } from '@material-ui/core';
 
+import { AuthContext } from '../../shared/context/auth-context';
 import { ErrorModal } from '../../shared/components/UIElements/ErrorModal';
 import { LoadingSpinner } from '../../shared/components/UIElements/LoadingSpinner';
 import { useHttpClient } from '../../shared/hooks/http-hook';
@@ -12,6 +13,7 @@ import './ProductForm.css';
 import { ImageUpload } from '../../shared/components/FormElements/ImageUpload';
 
 export const CreateProduct = () => {
+  const auth = useContext(AuthContext);
   const [formState, inputHandler] = useForm(
     {
       title: {
@@ -70,7 +72,9 @@ export const CreateProduct = () => {
       await sendHttpRequest(
         'http://localhost:5000/api/products',
         'POST',
-        {},
+        {
+          Authorization: `Bearer ${auth.token} `,
+        },
         formData
       );
     } catch (err) {}

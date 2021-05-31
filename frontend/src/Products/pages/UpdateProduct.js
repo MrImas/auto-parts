@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card } from '@material-ui/core';
 
+import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import { useForm } from '../../shared/hooks/product-form-hook';
 import { VALIDATOR_REQUIRE } from '../../shared/util/validation';
@@ -11,6 +12,7 @@ import { LoadingSpinner } from '../../shared/components/UIElements/LoadingSpinne
 import { ErrorModal } from '../../shared/components/UIElements/ErrorModal';
 
 export const UpdateProduct = () => {
+  const auth = useContext(AuthContext);
   const productId = useParams().productId;
   const [isLoading, error, sendHttpRequest, clearError] = useHttpClient();
   const [loadedCategories, setLoadedCategories] = useState();
@@ -101,6 +103,7 @@ export const UpdateProduct = () => {
         'PATCH',
         {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
         },
         JSON.stringify({
           title: formState.inputs.title.value,

@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { ErrorModal } from '../../shared/components/UIElements/ErrorModal';
 import { LoadingSpinner } from '../../shared/components/UIElements/LoadingSpinner';
 
+import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import { ProductList } from '../components/ProductList';
 
 export const Products = () => {
+  const auth = useContext(AuthContext);
   const [isLoading, error, sendHttpRequest, clearError] = useHttpClient();
   const [loadedProducts, setLoadedProducts] = useState();
 
@@ -25,7 +27,10 @@ export const Products = () => {
     try {
       await sendHttpRequest(
         `http://localhost:5000/api/products/${pid}`,
-        'DELETE'
+        'DELETE',
+        {
+          Authorization: `Bearer ${auth.token}`,
+        }
       );
       setLoadedProducts((prevProducts) =>
         prevProducts.filter((p) => p.id !== pid)

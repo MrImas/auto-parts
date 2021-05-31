@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { ErrorModal } from '../../shared/components/UIElements/ErrorModal';
 import { LoadingSpinner } from '../../shared/components/UIElements/LoadingSpinner';
 
+import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import { AddCategory } from '../components/AddCategory';
 import { CategoryList } from '../components/CategoryList';
 import './Categories.css';
 
 export const Categories = () => {
+  const auth = useContext(AuthContext);
   const [isLoading, error, sendHttpRequest, clearError] = useHttpClient();
   const [categories, setCategories] = useState([]);
 
@@ -18,6 +20,7 @@ export const Categories = () => {
         'POST',
         {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
         },
         JSON.stringify({
           name: categoryName,
@@ -31,7 +34,10 @@ export const Categories = () => {
     try {
       await sendHttpRequest(
         `http://localhost:5000/api/categories/${categoryId}`,
-        'DELETE'
+        'DELETE',
+        {
+          Authorization: `Bearer ${auth.token}`,
+        }
       );
       setCategories(
         categories.filter((category) => category.id !== categoryId)

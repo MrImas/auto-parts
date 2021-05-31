@@ -58,7 +58,7 @@ export const Auth = () => {
     console.log(authFormState.inputs);
     if (isLoginMode) {
       try {
-        const response = await sendHttpRequest(
+        const responseData = await sendHttpRequest(
           `http://localhost:5000/api/users/login`,
           'POST',
           {
@@ -69,13 +69,13 @@ export const Auth = () => {
             password: authFormState.inputs.password.value,
           })
         );
-        if (response) {
-          auth.login();
+        if (responseData) {
+          auth.login(responseData.token);
         }
       } catch (err) {}
     } else {
       try {
-        const response = await sendHttpRequest(
+        const responseData = await sendHttpRequest(
           'http://localhost:5000/api/users/signup',
           'POST',
           {
@@ -87,8 +87,8 @@ export const Auth = () => {
             password: authFormState.inputs.password.value,
           })
         );
-        if (response) {
-          auth.login();
+        if (responseData) {
+          auth.login(responseData.token);
         }
       } catch (err) {}
     }
