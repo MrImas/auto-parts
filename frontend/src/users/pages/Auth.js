@@ -71,7 +71,7 @@ export const Auth = () => {
         );
         if (responseData) {
           const isAdmin = responseData.role === 1;
-          auth.login(responseData.token, isAdmin);
+          auth.login(responseData.userId, responseData.token, isAdmin);
         }
       } catch (err) {}
     } else {
@@ -90,7 +90,7 @@ export const Auth = () => {
         );
         if (responseData) {
           const isAdmin = responseData.role === 1;
-          auth.login(responseData.token, isAdmin);
+          auth.login(responseData.userId, responseData.token, isAdmin);
         }
       } catch (err) {}
     }
