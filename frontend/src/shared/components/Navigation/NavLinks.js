@@ -16,14 +16,14 @@ export const NavLinks = () => {
           SHOP
         </NavLink>
       </li>
-      {auth.isLoggedIn && (
+      {auth.isLoggedIn && auth.isAdmin && (
         <li>
           <NavLink to='/products/new' exact>
             CREATE PRODUCT
           </NavLink>
         </li>
       )}
-      {auth.isLoggedIn && (
+      {auth.isLoggedIn && auth.isAdmin && (
         <li>
           <NavLink to='/category' exact>
             CATEGORIES

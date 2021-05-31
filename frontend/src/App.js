@@ -16,15 +16,18 @@ import { Auth } from './users/pages/Auth';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [token, setToken] = useState();
 
-  const login = useCallback((token) => {
+  const login = useCallback((token, isAdmin) => {
     setIsLoggedIn(true);
+    setIsAdmin(isAdmin);
     setToken(token);
   }, []);
 
   const logout = useCallback(() => {
     setIsLoggedIn(false);
+    setIsAdmin(false);
     setToken(false);
   }, []);
 
@@ -66,6 +69,7 @@ const App = () => {
     <AuthContext.Provider
       value={{
         isLoggedIn,
+        isAdmin,
         token,
         login,
         logout,
