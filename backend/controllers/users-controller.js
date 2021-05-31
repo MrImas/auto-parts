@@ -1,5 +1,6 @@
-import User from '../models/user.js';
+import * as bcrypt from 'bcrypt';
 
+import User from '../models/user.js';
 import HttpError from '../models/http-errors.js';
 
 export const signup = async (req, res, next) => {
@@ -18,10 +19,20 @@ export const signup = async (req, res, next) => {
       )
     );
   }
+
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(password, 12);
+  } catch (err) {
+    return next(
+      new HttpError('Could not sign up user, please try again.', 500)
+    );
+  }
+
   const newUser = new User({
     name,
     email,
-    password,
+    password: hashedPassword,
   });
   try {
     await newUser.save();
