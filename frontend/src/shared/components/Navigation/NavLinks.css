@@ -22,3 +22,19 @@
   border-color: #292929;
   color: #292929;
 }
+
+.cart-icon {
+  position: relative;
+}
+
+.cart-icon .num-of-products {
+  position: absolute;
+  top: 0px;
+  left: 35px;
+  font-size: 12px;
+  background-color: red;
+  border-radius: 20px;
+  text-align: center;
+  z-index: 1;
+  padding: 1px 6px;
+}

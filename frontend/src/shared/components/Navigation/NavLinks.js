@@ -49,13 +49,18 @@ export const NavLinks = () => {
           <Button onClick={auth.logout}>LOGOUT</Button>
         </li>
       )}
-      <li>
-        <NavLink to='/' exact>
-          <IconButton>
-            <ShoppingCartIcon />
-          </IconButton>
-        </NavLink>
-      </li>
+      {!auth.isAdmin && (
+        <li>
+          <div className='cart-icon'>
+            <span className='num-of-products'>{1}</span>
+            <NavLink to='/cart' exact>
+              <IconButton>
+                <ShoppingCartIcon />
+              </IconButton>
+            </NavLink>
+          </div>
+        </li>
+      )}
     </ul>
   );
 };
