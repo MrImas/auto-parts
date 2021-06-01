@@ -14,6 +14,7 @@ import { UpdateProduct } from './Products/pages/UpdateProduct';
 import { MainNavigation } from './shared/components/Navigation/MainNavigation';
 import { Auth } from './users/pages/Auth';
 import { useAuth } from './shared/hooks/auth-hook';
+import { ProductView } from './Products/pages/ProductView';
 
 const App = () => {
   const [isLoggedIn, isAdmin, userId, token, login, logout] = useAuth();
@@ -44,7 +45,7 @@ const App = () => {
           <CreateProduct />
         </Route>
         <Route path='/products/:productId' exact>
-          {isAdmin ? <UpdateProduct /> : null}
+          {isAdmin ? <UpdateProduct /> : <ProductView />}
         </Route>
         <Redirect to='/' />
       </Switch>

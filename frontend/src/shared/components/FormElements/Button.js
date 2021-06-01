@@ -26,6 +26,7 @@ const ButtonCustomized = (props) => {
       size={props.size || 'large'}
       onClick={props.onClick}
       color={props.color || 'secondary'}
+      style={props.style || {}}
     >
       {props.children}
     </Button>
