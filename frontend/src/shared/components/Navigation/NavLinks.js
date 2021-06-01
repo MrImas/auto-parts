@@ -4,11 +4,13 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { IconButton } from '@material-ui/core';
 
 import Button from '../FormElements/Button';
+import { CartContext } from '../../context/cart-context';
 import { AuthContext } from '../../context/auth-context';
 import './NavLinks.css';
 
 export const NavLinks = () => {
   const auth = useContext(AuthContext);
+  const cartContext = useContext(CartContext);
   return (
     <ul className='nav-links'>
       <li>
@@ -52,7 +54,7 @@ export const NavLinks = () => {
       {!auth.isAdmin && (
         <li>
           <div className='cart-icon'>
-            <span className='num-of-products'>{1}</span>
+            <span className='num-of-products'>{cartContext.cart.length}</span>
             <NavLink to='/cart' exact>
               <IconButton>
                 <ShoppingCartIcon />
