@@ -8,6 +8,7 @@ import productsRouter from './routes/products-routes.js';
 import HttpError from './models/http-errors.js';
 import categoriesRouter from './routes/categories-routes.js';
 import usersRouter from './routes/users-routes.js';
+import paymentRouter from './routes/payment-router.js';
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/uploads/images', express.static(path.join('uploads', 'images')));
 app.use('/api/products', productsRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/payments', paymentRouter);
 
 app.use((req, res, next) => {
   next(new HttpError('Could not find this route', 404));
