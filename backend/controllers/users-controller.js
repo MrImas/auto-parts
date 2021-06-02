@@ -207,7 +207,7 @@ export const removeFromCart = async (req, res, next) => {
       )
     );
   }
-  res.json({ cart: user.cart.map((obj) => obj.toObject({ getters: true })) });
+  res.json({ pid, quantity });
 };
 
 export const getCart = async (req, res, next) => {
@@ -222,6 +222,7 @@ export const getCart = async (req, res, next) => {
   if (!user) {
     return next(new HttpError('Could not find the user info', 404));
   }
+
   res.json({ cart: user.cart.toObject({ getters: true }) });
 };
 
