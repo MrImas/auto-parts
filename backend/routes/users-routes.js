@@ -15,4 +15,6 @@ usersRouter.get('/cart', usersController.getCart);
 usersRouter.patch('/addtocart', usersController.addToCart);
 usersRouter.delete('/removefromcart/:pid', usersController.removeFromCart);
 
+usersRouter.get('/history', usersController.getHistoryOfPayments);
+
 export default usersRouter;

@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 
 import User from '../models/user.js';
 import Product from '../models/product.js';
+import Payment from '../models/payment.js';
 import HttpError from '../models/http-errors.js';
-import user from '../models/user.js';
 
 export const signup = async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -215,10 +215,34 @@ export const getCart = async (req, res, next) => {
   try {
     user = await User.findById(req.userData.userId);
   } catch (err) {
-    new HttpError('Could not find the user info, please try again.', 500);
+    return next(
+      new HttpError('Could not find the user info, please try again.', 500)
+    );
   }
   if (!user) {
     return next(new HttpError('Could not find the user info', 404));
   }
   res.json({ cart: user.cart.toObject({ getters: true }) });
+};
+
+export const getHistoryOfPayments = async (req, res, next) => {
+  let historyOfPayments;
+  try {
+    historyOfPayments = await Payment.find({ userId: req.userData.userId });
+  } catch (err) {
+    return next(
+      new HttpError(
+        'Could not find history of payments, please try again.',
+        500
+      )
+    );
+  }
+  if (!historyOfPayments) {
+    return next(new HttpError('There is no history of payments', 404));
+  }
+  res.json({
+    history: historyOfPayments.map((history) =>
+      history.toObject({ getters: true })
+    ),
+  });
 };
