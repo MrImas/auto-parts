@@ -14,7 +14,12 @@ const paymentSchema = new Schema({
       quantity: { type: Number, required: true, min: 1 },
     },
   ],
-  status: { type: Boolean, required: true, default: false },
+  status: {
+    type: String,
+    enum: ['Awaiting', 'Approved', 'Declined'],
+    required: true,
+    default: 'Awaiting',
+  },
 });
 
 export default mongoose.model('Payment', paymentSchema);
