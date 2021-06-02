@@ -9,7 +9,6 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { CartContext } from '../../shared/context/cart-context';
 import { AuthContext } from '../../shared/context/auth-context';
 import Button from '../../shared/components/FormElements/Button';
 import './ProductItem.css';
@@ -31,7 +30,6 @@ const useStyles = makeStyles({
 export const ProductItem = (props) => {
   const classes = useStyles();
   const auth = useContext(AuthContext);
-  const cartContext = useContext(CartContext);
   return (
     <li className='product-item'>
       <Card>
@@ -68,7 +66,7 @@ export const ProductItem = (props) => {
             onClick={
               auth.isAdmin
                 ? () => props.onDelete(props.id)
-                : () => cartContext.addToCart(props.id)
+                : () => props.addToCart(props.id)
             }
           >
             {auth.isAdmin ? 'DELETE' : 'BUY'}

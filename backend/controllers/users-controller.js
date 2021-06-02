@@ -139,7 +139,7 @@ export const addToCart = async (req, res, next) => {
   try {
     if (indexOfProduct < 0) {
       quantity = 1;
-      user.cart.push({ productId: productToAdd, quantity });
+      user.cart.push({ productId: productToAdd.id, quantity });
     } else {
       quantity = user.cart[indexOfProduct].quantity++;
     }
@@ -149,7 +149,7 @@ export const addToCart = async (req, res, next) => {
       new HttpError('Could not add product to cart, please try again.', 500)
     );
   }
-  res.json({ pid, quantity });
+  res.json({ cart: user.cart.map((obj) => obj.toObject({ getters: true })) });
 };
 
 export const removeFromCart = async (req, res, next) => {
@@ -207,7 +207,7 @@ export const removeFromCart = async (req, res, next) => {
       )
     );
   }
-  res.json({ pid, quantity });
+  res.json({ cart: user.cart.map((obj) => obj.toObject({ getters: true })) });
 };
 
 export const getCart = async (req, res, next) => {
