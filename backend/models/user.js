@@ -8,6 +8,16 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minLength: 6 },
   role: { type: Number, required: true, default: 0 }, //role: 0 => regular user, role: 1 => user is admin
+  cart: [
+    {
+      productId: {
+        type: mongoose.Types.ObjectId,
+        required: true,
+        ref: 'Product',
+      },
+      quantity: { type: Number, required: true, min: 1 },
+    },
+  ],
 });
 
 userSchema.plugin(uniqueValidator);

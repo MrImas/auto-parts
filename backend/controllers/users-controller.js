@@ -2,7 +2,9 @@ import * as bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import User from '../models/user.js';
+import Product from '../models/product.js';
 import HttpError from '../models/http-errors.js';
+import user from '../models/user.js';
 
 export const signup = async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -103,4 +105,120 @@ export const login = async (req, res, next) => {
     role: existingUser.role,
     token,
   });
+};
+
+export const addToCart = async (req, res, next) => {
+  const { pid } = req.body;
+
+  let user;
+  try {
+    user = await User.findById(req.userData.userId);
+  } catch (err) {
+    return next(
+      new HttpError('Could not add product to cart, please try again.', 500)
+    );
+  }
+  if (!user) {
+    return next(
+      new HttpError('Could not identify user, please try again', 403)
+    );
+  }
+  let productToAdd;
+  try {
+    productToAdd = await Product.findById(pid);
+  } catch (err) {
+    return next(
+      new HttpError('Could not add product to cart, please try again.', 500)
+    );
+  }
+  if (!productToAdd) {
+    return next(new HttpError('Could not find the chosen product', 404));
+  }
+  const indexOfProduct = user.cart.map((p) => p.productId).indexOf(pid);
+  let quantity;
+  try {
+    if (indexOfProduct < 0) {
+      quantity = 1;
+      user.cart.push({ productId: productToAdd, quantity });
+    } else {
+      quantity = user.cart[indexOfProduct].quantity++;
+    }
+    await user.save();
+  } catch (err) {
+    return next(
+      new HttpError('Could not add product to cart, please try again.', 500)
+    );
+  }
+  res.json({ pid, quantity });
+};
+
+export const removeFromCart = async (req, res, next) => {
+  const pid = req.params.pid;
+  let user;
+  try {
+    user = await User.findById(req.userData.userId);
+  } catch (err) {
+    return next(
+      new HttpError('Could not add product to cart, please try again.', 500)
+    );
+  }
+  if (!user) {
+    return next(
+      new HttpError('Could not identify user, please try again', 403)
+    );
+  }
+
+  let productToRemoveFromCart;
+  try {
+    productToRemoveFromCart = await Product.findById(pid);
+  } catch (err) {
+    return next(
+      new HttpError(
+        'Could not remove product from cart, please try again.',
+        500
+      )
+    );
+  }
+  if (!productToRemoveFromCart) {
+    return next(new HttpError('Could not find the chosen product', 404));
+  }
+
+  const indexOfProduct = user.cart.map((p) => p.productId).indexOf(pid);
+  let quantity;
+  try {
+    if (indexOfProduct > -1) {
+      if (user.cart[indexOfProduct].quantity > 1) {
+        quantity = user.cart[indexOfProduct].quantity--;
+      } else {
+        user.cart.pull(user.cart[indexOfProduct]);
+        quantity = 0;
+      }
+      await user.save();
+    } else {
+      return next(
+        new HttpError('The chosen product is not part of the user cart.', 404)
+      );
+    }
+  } catch (err) {
+    return next(
+      new HttpError(
+        'Could not remove product fro, cart, please try again.',
+        500
+      )
+    );
+  }
+  res.json({ pid, quantity });
+};
+
+export const getCart = async (req, res, next) => {
+  let user;
+  try {
+    user = await User.findById(req.userData.userId);
+  } catch (err) {
+    new HttpError('Could not find the user info, please try again.', 500);
+  }
+  if (!user) {
+    return next(new HttpError('Could not find the user info', 404));
+  }
+  res.json({ cart: user.cart.toObject({ getters: true }) });
 };

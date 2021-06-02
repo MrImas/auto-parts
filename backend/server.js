@@ -49,5 +49,5 @@ mongoose
     'mongodb+srv://tester:tester123@cluster0.3naae.mongodb.net/autoParts?retryWrites=true&w=majority',
     { useNewUrlParser: true }
   )
-  .then(app.listen(5000, () => console.log('Server is listening on port 5000')))
+  .then(app.listen(5000))
   .catch((err) => console.log(err));
