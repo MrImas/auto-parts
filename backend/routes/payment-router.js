@@ -14,6 +14,6 @@ paymentRouter.use(checkIsAdmin);
 
 paymentRouter.get('/', paymentController.getPayments);
 
-paymentRouter.patch('/', (req, res, next) => res.json());
+paymentRouter.patch('/:paymentId', paymentController.updateStatusOfPayment);
 
 export default paymentRouter;

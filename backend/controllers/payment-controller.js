@@ -59,3 +59,41 @@ export const getPayments = async (req, res, next) => {
     payments: payments.map((payment) => payment.toObject({ getters: true })),
   });
 };
+
+export const updateStatusOfPayment = async (req, res, next) => {
+  const { status } = req.body;
+  const paymentId = req.params.paymentId;
+
+  let payment;
+  try {
+    payment = await Payment.findById(paymentId);
+  } catch (err) {
+    return next(
+      new HttpError(
+        'Could not find the payment for the provided id, please try again',
+        500
+      )
+    );
+  }
+  if (!payment) {
+    return next(
+      new HttpError(
+        'Did not find payment for the provided id, please try again',
+        404
+      )
+    );
+  }
+
+  payment.status = status;
+  try {
+    await payment.save();
+  } catch (err) {
+    return next(
+      new HttpError(
+        'Could not change the status of the payment, please try again',
+        500
+      )
+    );
+  }
+  res.json({ payment: payment.toObject({ getters: true }) });
+};
