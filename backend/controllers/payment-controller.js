@@ -40,3 +40,22 @@ export const createPayment = async (req, res, next) => {
   }
   res.status(201).json({ payment: payment.toObject({ getters: true }) });
 };
+
+export const getPayments = async (req, res, next) => {
+  let payments;
+  try {
+    payments = await Payment.find();
+  } catch (err) {
+    return next(
+      new HttpError('Could not find all payments, please try again', 500)
+    );
+  }
+  if (!payments) {
+    return next(
+      new HttpError('There are no found payments, please try again', 404)
+    );
+  }
+  res.json({
+    payments: payments.map((payment) => payment.toObject({ getters: true })),
+  });
+};

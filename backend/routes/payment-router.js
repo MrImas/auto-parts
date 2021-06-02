@@ -12,7 +12,7 @@ paymentRouter.post('/', paymentController.createPayment);
 
 paymentRouter.use(checkIsAdmin);
 
-paymentRouter.get('/', (req, res, next) => res.json());
+paymentRouter.get('/', paymentController.getPayments);
 
 paymentRouter.patch('/', (req, res, next) => res.json());
 
