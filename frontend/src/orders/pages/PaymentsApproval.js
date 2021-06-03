@@ -25,9 +25,9 @@ const useStyles = makeStyles({
   },
 });
 
-const HEADERS = [' ', 'Payment ID', 'Date Of Purchase', 'Status'];
+const HEADERS = [' ', 'Payment ID', 'Date Of Purchase', 'Status', '', ''];
 
-export const History = () => {
+export const PaymentsApproval = () => {
   const classes = useStyles();
   const auth = useContext(AuthContext);
   const [historyOfOrders, setHistoryOfOrders] = useState();
@@ -36,16 +36,40 @@ export const History = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       const responseData = await sendHttpRequest(
-        `http://localhost:5000/api/users/history`,
+        `http://localhost:5000/api/payments`,
         'GET',
         {
           Authorization: `Bearer ${auth.token}`,
         }
       );
-      setHistoryOfOrders(responseData.history);
+      setHistoryOfOrders(responseData.payments);
     };
     fetchHistory();
   }, [sendHttpRequest, auth.token]);
+
+  const statusHandler = async (oid, status) => {
+    try {
+      const responseData = await sendHttpRequest(
+        `http://localhost:5000/api/payments/${oid}`,
+        'PATCH',
+        {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
+        },
+        JSON.stringify({
+          status,
+        })
+      );
+      setHistoryOfOrders((prevOrders) =>
+        prevOrders.map((order) => {
+          if (order.id === oid) {
+            order.status = responseData.payments.status;
+          }
+          return order;
+        })
+      );
+    } catch (err) {}
+  };
 
   return (
     <Card>
@@ -56,7 +80,7 @@ export const History = () => {
           <>
             <Typography variant='h2'>HISTORY</Typography>
             <Typography variant='h5'>
-              You have {historyOfOrders.length} orders
+              There are {historyOfOrders.length} orders
             </Typography>
             <TableContainer component={Paper}>
               <Table>
@@ -69,14 +93,11 @@ export const History = () => {
                 </TableHead>
                 <TableBody>
                   {historyOfOrders.map((order) => (
-                    // <TableRow key={order.id}>
-                    //   <TableCell>{order.id}</TableCell>
-                    //   <TableCell>
-                    //     {order.createdAt && order.createdAt.split('T')[0]}
-                    //   </TableCell>
-                    //   <TableCell>{order.status}</TableCell>
-                    // </TableRow>
-                    <OrderItem key={order.id} order={order} />
+                    <OrderItem
+                      key={order.id}
+                      order={order}
+                      statusHandler={statusHandler}
+                    />
                   ))}
                 </TableBody>
               </Table>

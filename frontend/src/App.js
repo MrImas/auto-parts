@@ -18,6 +18,7 @@ import { useAuth } from './shared/hooks/auth-hook';
 import { ProductView } from './Products/pages/ProductView';
 import { Cart } from './cart/pages/Cart';
 import { History } from './orders/pages/History';
+import { PaymentsApproval } from './orders/pages/PaymentsApproval';
 
 const App = () => {
   const [isLoggedIn, isAdmin, userId, token, login, logout] = useAuth();
@@ -54,7 +55,7 @@ const App = () => {
           <Cart />
         </Route>
         <Route path='/history' exact>
-          <History />
+          {isAdmin ? <PaymentsApproval /> : <History />}
         </Route>
         <Redirect to='/' />
       </Switch>
