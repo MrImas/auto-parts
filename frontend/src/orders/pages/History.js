@@ -68,7 +68,9 @@ export const History = () => {
                   {historyOfOrders.map((order) => (
                     <TableRow key={order.id}>
                       <TableCell>{order.id}</TableCell>
-                      <TableCell>{order.createdAt}</TableCell>
+                      <TableCell>
+                        {order.createdAt && order.createdAt.split('T')[0]}
+                      </TableCell>
                       <TableCell>{order.status}</TableCell>
                     </TableRow>
                   ))}
