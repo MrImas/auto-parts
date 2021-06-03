@@ -10,6 +10,7 @@ import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
 import { LoadingSpinner } from '../../shared/components/UIElements/LoadingSpinner';
 import { ErrorModal } from '../../shared/components/UIElements/ErrorModal';
+import { ImageUpload } from '../../shared/components/FormElements/ImageUpload';
 
 export const UpdateProduct = () => {
   const auth = useContext(AuthContext);
@@ -38,6 +39,10 @@ export const UpdateProduct = () => {
       },
       category: {
         value: '',
+        isValid: false,
+      },
+      image: {
+        value: null,
         isValid: false,
       },
     },
@@ -85,6 +90,10 @@ export const UpdateProduct = () => {
               value: product.category,
               isValid: true,
             },
+            image: {
+              value: product.image,
+              isValid: true,
+            },
           },
           true
         );
@@ -96,22 +105,22 @@ export const UpdateProduct = () => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log(formState);
+    const formData = new FormData();
+    formData.append('title', formState.inputs.title.value);
+    formData.append('price', formState.inputs.price.value);
+    formData.append('description', formState.inputs.description.value);
+    formData.append('content', formState.inputs.content.value);
+    formData.append('category', formState.inputs.category.value);
+    formData.append('image', formState.inputs.image.value);
     try {
       await sendHttpRequest(
         `http://localhost:5000/api/products/${productId}`,
         'PATCH',
         {
-          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/json',
           Authorization: `Bearer ${auth.token}`,
         },
-        JSON.stringify({
-          title: formState.inputs.title.value,
-          price: formState.inputs.price.value,
-          description: formState.inputs.description.value,
-          content: formState.inputs.content.value,
-          category: formState.inputs.category.value,
-        })
+        formData
       );
     } catch (err) {}
   };
@@ -182,6 +191,13 @@ export const UpdateProduct = () => {
               initialValue={formState.inputs.category.value}
               initialValid={formState.inputs.category.isValid}
             />
+            <div className='product-form__file-input'>
+              <ImageUpload
+                id='image'
+                onInput={inputHandler}
+                errorText={'Please provide an image.'}
+              />
+            </div>
             <Button type='submit' disabled={!formState.isValid}>
               SUBMIT
             </Button>

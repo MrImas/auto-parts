@@ -20,7 +20,11 @@ productsRouter.post(
   productsController.createProduct
 );
 
-productsRouter.patch('/:pid', productsController.updateProduct);
+productsRouter.patch(
+  '/:pid',
+  fileUpload.single('image'),
+  productsController.updateProduct
+);
 
 productsRouter.delete('/:pid', productsController.deleteProduct);
 
