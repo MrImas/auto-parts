@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Card } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import { useForm } from '../../shared/hooks/product-form-hook';
@@ -15,7 +16,21 @@ import './Auth.css';
 import { LoadingSpinner } from '../../shared/components/UIElements/LoadingSpinner';
 import { ErrorModal } from '../../shared/components/UIElements/ErrorModal';
 
+const useStyles = makeStyles({
+  root: {
+    minHeight: '500px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  switchBtn: {
+    maxWidth: '20%',
+  },
+});
+
 export const Auth = () => {
+  const classes = useStyles();
   const [authFormState, inputHandler, setDataHandler] = useForm({
     email: {
       value: '',
@@ -99,7 +114,7 @@ export const Auth = () => {
   return (
     <>
       {error && <ErrorModal error={error} clearError={clearError} />}
-      <Card>
+      <Card className={classes.root}>
         {isLoading && <LoadingSpinner />}
         <form className='authentication-form' onSubmit={onSubmitHandler}>
           <h2>LOGIN</h2>
@@ -123,15 +138,15 @@ export const Auth = () => {
           <Input
             id='password'
             label='Password'
-            validators={[VALIDATOR_MINLENGTH(4)]}
-            errorText='Please enter a valid password of at least 4 characters'
+            validators={[VALIDATOR_MINLENGTH(6)]}
+            errorText='Please enter a valid password of at least 6 characters'
             onInput={inputHandler}
           />
           <Button type='submit' disabled={!authFormState.isValid}>
             {isLoginMode ? 'LOGIN' : 'SIGNUP'}
           </Button>
         </form>
-        <Button onClick={changeLoginModeHandler}>
+        <Button className={classes.switchBtn} onClick={changeLoginModeHandler}>
           SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}
         </Button>
       </Card>

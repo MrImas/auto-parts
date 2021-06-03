@@ -28,7 +28,7 @@ const useStyles = makeStyles({
 
 export const ProductFullView = (props) => {
   const classes = useStyles();
-  const { image, title, price, description, content } = props.product;
+  const { id, image, title, price, description, content } = props.product;
 
   return (
     <Card className={classes.root}>
@@ -63,6 +63,7 @@ export const ProductFullView = (props) => {
               width: '30%',
               marginTop: '4rem',
             }}
+            onClick={() => props.onBuyClick(id)}
           >
             BUY NOW
           </Button>

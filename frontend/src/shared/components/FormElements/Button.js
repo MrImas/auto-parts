@@ -27,6 +27,7 @@ const ButtonCustomized = (props) => {
       onClick={props.onClick}
       color={props.color || 'secondary'}
       style={props.style || {}}
+      className={props.className}
     >
       {props.children}
     </Button>
