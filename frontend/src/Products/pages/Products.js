@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { Card } from '@material-ui/core';
+
 import { ErrorModal } from '../../shared/components/UIElements/ErrorModal';
 import { LoadingSpinner } from '../../shared/components/UIElements/LoadingSpinner';
-
 import CartContext from '../../shared/context/cart-context';
 import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
@@ -63,11 +64,13 @@ export const Products = () => {
       <div>
         {isLoading && <LoadingSpinner />}
         {loadedProducts && (
-          <ProductList
-            items={loadedProducts}
-            onDelete={deleteProductHandler}
-            addToCart={addToCartHandler}
-          />
+          <Card style={{ paddingTop: '60px' }}>
+            <ProductList
+              items={loadedProducts}
+              onDelete={deleteProductHandler}
+              addToCart={addToCartHandler}
+            />
+          </Card>
         )}
       </div>
     </>

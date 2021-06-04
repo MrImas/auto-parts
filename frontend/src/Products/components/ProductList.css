@@ -1,8 +1,8 @@
 .product-list {
   list-style: none;
   width: 90%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
+  display: grid;
   margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 40px 30px;
 }

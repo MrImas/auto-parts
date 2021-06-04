@@ -11,14 +11,20 @@ import {
 
 import { AuthContext } from '../../shared/context/auth-context';
 import Button from '../../shared/components/FormElements/Button';
-import './ProductItem.css';
 
 const useStyles = makeStyles({
+  root: {
+    height: '500px',
+  },
   cardActionsContainer: {
     justifyContent: 'space-between',
   },
+  cardContentContainer: {
+    height: '190px',
+  },
   actionButton: {
-    padding: '8px 45px',
+    // padding: '8px 45px',
+    width: '40%',
   },
   image: {
     height: '250px',
@@ -31,8 +37,8 @@ export const ProductItem = (props) => {
   const classes = useStyles();
   const auth = useContext(AuthContext);
   return (
-    <li className='product-item'>
-      <Card>
+    <li>
+      <Card className={classes.root}>
         <CardActionArea>
           <CardMedia
             component='img'
@@ -41,7 +47,7 @@ export const ProductItem = (props) => {
             title={props.title}
           />
         </CardActionArea>
-        <CardContent>
+        <CardContent className={classes.cardContentContainer}>
           <Typography variant='h4'>{props.title}</Typography>
           <Typography color='secondary' variant='h6'>
             ${props.price}

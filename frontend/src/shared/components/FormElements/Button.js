@@ -13,6 +13,8 @@ const ButtonCustomized = (props) => {
         disabled={props.disabled || false}
         to={props.to}
         exact={props.exact}
+        className={props.className}
+        style={props.style || {}}
       >
         {props.children}
       </Button>
