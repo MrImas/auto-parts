@@ -87,7 +87,7 @@ export const updateProduct = async (req, res, next) => {
       new HttpError('Could not find a product with the provided id.', 404)
     );
   }
-  if (req.file.path) {
+  if (req.file && req.file.path) {
     productToUpdate.image = req.file.path;
   }
   for (let prop in propsChanges) {

@@ -7,8 +7,8 @@ import './ImageUpload.css';
 export const ImageUpload = (props) => {
   const inputRef = useRef();
   const [file, setFile] = useState();
-  const [fileIsValid, setFileIsValid] = useState(false);
-  const [previewURL, setPreviewURL] = useState();
+  const [fileIsValid, setFileIsValid] = useState(props.fileIsValid);
+  const [previewURL, setPreviewURL] = useState(props.previewURL || null);
 
   useEffect(() => {
     if (file) {
@@ -21,9 +21,14 @@ export const ImageUpload = (props) => {
       } catch (err) {}
     } else {
       setFile();
-      setPreviewURL();
+      // setPreviewURL();
     }
   }, [file]);
+
+  // useEffect(() => {
+  //   if (previewURL) {
+  //   }
+  // }, []);
 
   const imagePickedHandler = (event) => {
     let image;

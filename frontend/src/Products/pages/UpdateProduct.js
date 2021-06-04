@@ -194,6 +194,8 @@ export const UpdateProduct = () => {
             <div className='product-form__file-input'>
               <ImageUpload
                 id='image'
+                previewURL={`http://localhost:5000/${formState.inputs.image.value}`}
+                fileIsValid
                 onInput={inputHandler}
                 errorText={'Please provide an image.'}
               />
