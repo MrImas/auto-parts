@@ -3,6 +3,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import Button from './Button';
 import './ImageUpload.css';
+import { IconButton } from '@material-ui/core';
 
 export const ImageUpload = (props) => {
   const inputRef = useRef();
@@ -43,10 +44,24 @@ export const ImageUpload = (props) => {
     inputRef.current.click();
   };
 
+  const removePickedImageHandler = () => {
+    setFile();
+    setPreviewURL();
+    props.onInput(props.id, null, false);
+  };
+
   return (
     <div>
       <div className='image-upload__preview'>
-        {previewURL && fileIsValid && <CloseIcon className='close-img-btn' />}
+        {previewURL && fileIsValid && (
+          <IconButton
+            className='close-img-btn'
+            style={{ position: 'absolute' }}
+            onClick={removePickedImageHandler}
+          >
+            <CloseIcon />
+          </IconButton>
+        )}
         {previewURL && fileIsValid && <img src={previewURL} alt='preview' />}
         {/* {!previewURL && <p>{props.errorText}</p>} */}
         {!previewURL && (
