@@ -21,14 +21,8 @@ export const ImageUpload = (props) => {
       } catch (err) {}
     } else {
       setFile();
-      // setPreviewURL();
     }
   }, [file]);
-
-  // useEffect(() => {
-  //   if (previewURL) {
-  //   }
-  // }, []);
 
   const imagePickedHandler = (event) => {
     let image;

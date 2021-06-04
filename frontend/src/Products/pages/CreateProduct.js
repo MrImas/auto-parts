@@ -133,6 +133,13 @@ export const CreateProduct = () => {
                   selectItems={loadedCategories}
                   onInput={inputHandler}
                 />
+                <Button
+                  className={'product-form__submit-btn'}
+                  type='submit'
+                  disabled={!formState.isValid}
+                >
+                  SUBMIT
+                </Button>
               </div>
               <div className='product-form__file-input'>
                 <ImageUpload
@@ -142,9 +149,6 @@ export const CreateProduct = () => {
                 />
               </div>
             </div>
-            <Button type='submit' disabled={!formState.isValid}>
-              SUBMIT
-            </Button>
           </form>
         )}
       </Card>

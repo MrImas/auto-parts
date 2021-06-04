@@ -117,7 +117,6 @@ export const UpdateProduct = () => {
         `http://localhost:5000/api/products/${productId}`,
         'PATCH',
         {
-          // 'Content-Type': 'application/json',
           Authorization: `Bearer ${auth.token}`,
         },
         formData
@@ -140,69 +139,77 @@ export const UpdateProduct = () => {
         {isLoading && <LoadingSpinner />}
         {loadedProduct && loadedCategories && (
           <form className='product-form' onSubmit={onSubmitHandler}>
-            <Input
-              id='title'
-              label='title'
-              validators={[VALIDATOR_REQUIRE()]}
-              errorText='Please enter a title.'
-              onInput={inputHandler}
-              variant='outlined'
-              initialValue={formState.inputs.title.value}
-              initialValid={formState.inputs.title.isValid}
-            />
-            <Input
-              id='price'
-              type='number'
-              initialValue={formState.inputs.price.value}
-              label='price $'
-              validators={[VALIDATOR_REQUIRE()]}
-              errorText='Please enter a price.'
-              onInput={inputHandler}
-              variant='outlined'
-              initialValid={formState.inputs.price.isValid}
-            />
-            <Input
-              id='description'
-              label='description'
-              rows={3}
-              errorText='Please enter a description.'
-              validators={[VALIDATOR_REQUIRE()]}
-              onInput={inputHandler}
-              variant='outlined'
-              initialValue={formState.inputs.description.value}
-              initialValid={formState.inputs.description.isValid}
-            />
-            <Input
-              id='content'
-              label='content'
-              rows={6}
-              validators={[]}
-              onInput={inputHandler}
-              variant='outlined'
-              initialValue={formState.inputs.content.value}
-              initialValid={formState.inputs.content.isValid}
-            />
-            <Input
-              id='category'
-              type='select'
-              label='category'
-              selectItems={loadedCategories}
-              onInput={inputHandler}
-              initialValue={formState.inputs.category.value}
-              initialValid={formState.inputs.category.isValid}
-            />
-            <div className='product-form__file-input'>
-              <ImageUpload
-                id='image'
-                previewURL={`http://localhost:5000/${formState.inputs.image.value}`}
-                fileIsValid
-                onInput={inputHandler}
-                errorText={'Please provide an image.'}
-              />
+            <div className='product-form__inputs'>
+              <div className='product-form__text-inputs'>
+                <Input
+                  id='title'
+                  label='title'
+                  validators={[VALIDATOR_REQUIRE()]}
+                  errorText='Please enter a title.'
+                  onInput={inputHandler}
+                  variant='outlined'
+                  initialValue={formState.inputs.title.value}
+                  initialValid={formState.inputs.title.isValid}
+                />
+                <Input
+                  id='price'
+                  type='number'
+                  initialValue={formState.inputs.price.value}
+                  label='price $'
+                  validators={[VALIDATOR_REQUIRE()]}
+                  errorText='Please enter a price.'
+                  onInput={inputHandler}
+                  variant='outlined'
+                  initialValid={formState.inputs.price.isValid}
+                />
+                <Input
+                  id='description'
+                  label='description'
+                  rows={3}
+                  errorText='Please enter a description.'
+                  validators={[VALIDATOR_REQUIRE()]}
+                  onInput={inputHandler}
+                  variant='outlined'
+                  initialValue={formState.inputs.description.value}
+                  initialValid={formState.inputs.description.isValid}
+                />
+                <Input
+                  id='content'
+                  label='content'
+                  rows={6}
+                  validators={[]}
+                  onInput={inputHandler}
+                  variant='outlined'
+                  initialValue={formState.inputs.content.value}
+                  initialValid={formState.inputs.content.isValid}
+                />
+                <Input
+                  id='category'
+                  type='select'
+                  label='category'
+                  selectItems={loadedCategories}
+                  onInput={inputHandler}
+                  initialValue={formState.inputs.category.value}
+                  initialValid={formState.inputs.category.isValid}
+                />
+                <Button
+                  className={'product-form__submit-btn'}
+                  type='submit'
+                  disabled={!formState.isValid}
+                >
+                  SUBMIT
+                </Button>
+              </div>
+              <div className='product-form__file-input'>
+                <ImageUpload
+                  id='image'
+                  previewURL={`http://localhost:5000/${formState.inputs.image.value}`}
+                  fileIsValid
+                  onInput={inputHandler}
+                  errorText={'Please provide an image.'}
+                />
+              </div>
             </div>
-            <Button type='submit' disabled={!formState.isValid}>
-              SUBMIT
-            </Button>
           </form>
         )}
       </Card>

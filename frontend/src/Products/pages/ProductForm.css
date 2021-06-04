@@ -14,6 +14,7 @@
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-around;
+  height: 650px;
 }
 
 .product-form__text-inputs {
@@ -21,6 +22,11 @@
   flex-direction: column;
   width: 45%;
   height: 100%;
+  justify-content: space-between;
+}
+
+.product-form__submit-btn {
+  width: 30%;
 }
 
 .product-form__file-input {

@@ -1,7 +1,7 @@
 .image-upload__preview {
   position: relative;
-  width: 25rem;
-  height: 25rem;
+  width: 35rem;
+  height: 35rem;
   border: 1px solid #ccc;
   display: flex;
   justify-content: center;
