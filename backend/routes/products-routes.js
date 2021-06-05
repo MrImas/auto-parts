@@ -30,6 +30,12 @@ productsRouter.post(
 productsRouter.patch(
   '/:pid',
   fileUpload.single('image'),
+  [
+    check('title').notEmpty(),
+    check('price').isInt({ min: 1 }),
+    check('description').notEmpty(),
+    check('content').notEmpty(),
+  ],
   productsController.updateProduct
 );
 

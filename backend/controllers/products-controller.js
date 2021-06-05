@@ -76,6 +76,10 @@ export const getProduct = async (req, res, next) => {
 };
 
 export const updateProduct = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError('Invalid inputs, please check your data', 422));
+  }
   const productId = req.params.pid;
   const propsChanges = req.body;
   let productToUpdate;
