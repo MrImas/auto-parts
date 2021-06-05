@@ -1,4 +1,5 @@
 import express from 'express';
+import { check } from 'express-validator';
 
 import { fileUpload } from '../middlewares/file-upload.js';
 import * as productsController from '../controllers/products-controller.js';
@@ -17,6 +18,12 @@ productsRouter.use(checkIsAdmin);
 productsRouter.post(
   '/',
   fileUpload.single('image'),
+  [
+    check('title').notEmpty(),
+    check('price').isInt({ min: 1 }),
+    check('description').notEmpty(),
+    check('content').notEmpty(),
+  ],
   productsController.createProduct
 );
 

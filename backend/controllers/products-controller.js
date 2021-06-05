@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import fs from 'fs';
+import { validationResult } from 'express-validator';
 
 import Product from '../models/product.js';
 import HttpError from '../models/http-errors.js';
@@ -18,6 +19,10 @@ export const getProducts = async (req, res, next) => {
 };
 
 export const createProduct = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError('Invalid inputs, please check your data', 422));
+  }
   const { title, price, description, content, category } = req.body;
   const createdProduct = new Product({
     title,
