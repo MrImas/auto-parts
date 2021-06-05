@@ -1,4 +1,5 @@
 import express from 'express';
+import { check } from 'express-validator';
 
 import * as usersController from '../controllers/users-controller.js';
 import { checkAuth } from '../middlewares/check-auth.js';
@@ -7,7 +8,15 @@ const usersRouter = express.Router();
 
 usersRouter.post('/login', usersController.login);
 
-usersRouter.post('/signup', usersController.signup);
+usersRouter.post(
+  '/signup',
+  [
+    check('name').notEmpty(),
+    check('email').normalizeEmail().isEmail(),
+    check('password').isLength({ min: 6 }),
+  ],
+  usersController.signup
+);
 
 usersRouter.use(checkAuth);
 

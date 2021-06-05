@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { validationResult } from 'express-validator';
 
 import User from '../models/user.js';
 import Product from '../models/product.js';
@@ -7,6 +8,10 @@ import Payment from '../models/payment.js';
 import HttpError from '../models/http-errors.js';
 
 export const signup = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError('Invalid inputs, please check your data', 422));
+  }
   const { name, email, password } = req.body;
   let isUserSignedUp;
   try {
