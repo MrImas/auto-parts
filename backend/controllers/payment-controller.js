@@ -1,8 +1,10 @@
-import { json } from 'body-parser';
 import { validationResult } from 'express-validator';
+import mongoose from 'mongoose';
+
 import HttpError from '../models/http-errors.js';
 import Payment from '../models/payment.js';
 import Product from '../models/product.js';
+import User from '../models/user.js';
 
 export const createPayment = async (req, res, next) => {
   const errors = validationResult(req);
@@ -34,7 +36,13 @@ export const createPayment = async (req, res, next) => {
     cart,
   });
   try {
-    await payment.save();
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await payment.save({ session: sess });
+    const user = await User.findById(req.userData.userId);
+    user.cart = [];
+    await user.save();
+    sess.commitTransaction();
   } catch (err) {
     return next(
       new HttpError('Could not make the payment, please try again', 500)
