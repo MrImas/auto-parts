@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Card } from '@material-ui/core';
 
 import { AuthContext } from '../../shared/context/auth-context';
@@ -48,6 +48,7 @@ export const UpdateProduct = () => {
     },
     false
   );
+  const history = useHistory();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -121,6 +122,7 @@ export const UpdateProduct = () => {
         },
         formData
       );
+      history.push('/');
     } catch (err) {}
   };
 

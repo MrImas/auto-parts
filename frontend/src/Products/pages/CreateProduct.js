@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Card } from '@material-ui/core';
 
 import { AuthContext } from '../../shared/context/auth-context';
@@ -45,6 +46,7 @@ export const CreateProduct = () => {
   );
   const [isLoading, error, sendHttpRequest, clearError] = useHttpClient();
   const [loadedCategories, setLoadedCategories] = useState();
+  const history = useHistory();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -77,6 +79,7 @@ export const CreateProduct = () => {
         },
         formData
       );
+      history.push('/');
     } catch (err) {}
   };
 
