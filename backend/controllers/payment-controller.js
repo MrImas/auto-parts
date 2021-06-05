@@ -7,7 +7,7 @@ import Product from '../models/product.js';
 export const createPayment = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array() });
+    return next(new HttpError('Invalid inputs, please check your data', 422));
   }
   const { cart } = req.body;
   cart.map(async (productAndQuantityObj) => {
@@ -63,6 +63,10 @@ export const getPayments = async (req, res, next) => {
 };
 
 export const updateStatusOfPayment = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError('Invalid inputs, please check your data', 422));
+  }
   const { status } = req.body;
   const paymentId = req.params.paymentId;
 
@@ -85,7 +89,14 @@ export const updateStatusOfPayment = async (req, res, next) => {
       )
     );
   }
-
+  if (payment.status !== 'Awaiting') {
+    return next(
+      new HttpError(
+        'Could not change payment status which already approved or declined',
+        422
+      )
+    );
+  }
   payment.status = status;
   try {
     await payment.save();

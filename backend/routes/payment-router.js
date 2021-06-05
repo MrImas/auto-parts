@@ -23,6 +23,10 @@ paymentRouter.use(checkIsAdmin);
 
 paymentRouter.get('/', paymentController.getPayments);
 
-paymentRouter.patch('/:paymentId', paymentController.updateStatusOfPayment);
+paymentRouter.patch(
+  '/:paymentId',
+  [check('status').isIn(['Approved', 'Declined'])],
+  paymentController.updateStatusOfPayment
+);
 
 export default paymentRouter;
