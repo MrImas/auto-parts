@@ -124,15 +124,16 @@ export const CreateProduct = () => {
                   id='content'
                   label='content'
                   rows={6}
-                  validators={[]}
+                  validators={[VALIDATOR_REQUIRE()]}
+                  errorText='Please enter content.'
                   onInput={inputHandler}
                   variant='outlined'
-                  initialValid
                 />
                 <Input
                   id='category'
                   type='select'
                   label='category'
+                  validators={[VALIDATOR_REQUIRE()]}
                   selectItems={loadedCategories}
                   onInput={inputHandler}
                 />

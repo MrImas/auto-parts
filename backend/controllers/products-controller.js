@@ -35,8 +35,7 @@ export const createProduct = async (req, res, next) => {
   }
   if (!categoryOfProduct) {
     return next(
-      new HttpError(`Could not find any category with the provided  id.`),
-      404
+      new HttpError(`Could not find any category with the provided  id.`, 404)
     );
   }
   try {
