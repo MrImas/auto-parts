@@ -15,6 +15,7 @@ import Button from '../../shared/components/FormElements/Button';
 const useStyles = makeStyles({
   root: {
     height: '500px',
+    maxWidth: '320px',
   },
   cardActionsContainer: {
     justifyContent: 'space-between',

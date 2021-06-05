@@ -32,16 +32,18 @@ export const Categories = () => {
 
   const deleteCategoryHandler = async (categoryId) => {
     try {
-      await sendHttpRequest(
+      const responseData = await sendHttpRequest(
         `http://localhost:5000/api/categories/${categoryId}`,
         'DELETE',
         {
           Authorization: `Bearer ${auth.token}`,
         }
       );
-      setCategories(
-        categories.filter((category) => category.id !== categoryId)
-      );
+      if (responseData) {
+        setCategories(
+          categories.filter((category) => category.id !== categoryId)
+        );
+      }
     } catch (err) {}
   };
 

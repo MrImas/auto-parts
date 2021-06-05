@@ -61,6 +61,14 @@ export const deleteCategory = async (req, res, next) => {
       new HttpError('Category with the provided name was not found', 404)
     );
   }
+  if (categoryToDelete.products.length > 0) {
+    return next(
+      new HttpError(
+        'Could not delete this category. First remove all products from that category.',
+        403
+      )
+    );
+  }
   try {
     await categoryToDelete.remove();
   } catch (err) {
