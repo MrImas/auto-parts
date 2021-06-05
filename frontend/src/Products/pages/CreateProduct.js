@@ -62,7 +62,6 @@ export const CreateProduct = () => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log(formState);
     try {
       const formData = new FormData();
       formData.append('title', formState.inputs.title.value);

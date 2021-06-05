@@ -64,7 +64,7 @@ export const Products = () => {
       <div>
         {isLoading && <LoadingSpinner />}
         {loadedProducts && (
-          <Card style={{ paddingTop: '60px' }}>
+          <Card style={{ padding: '60px 0px' }}>
             <ProductList
               items={loadedProducts}
               onDelete={deleteProductHandler}

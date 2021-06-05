@@ -30,7 +30,6 @@ export const ImageUpload = (props) => {
     let isValidImage = false;
     if (event.target.files && event.target.files.length === 1) {
       image = event.target.files[0];
-      console.log(image);
       isValidImage = true;
       setFile(image);
     } else {
@@ -38,6 +37,7 @@ export const ImageUpload = (props) => {
     }
     setFileIsValid(isValidImage);
     props.onInput(props.id, image, isValidImage);
+    event.target.value = '';
   };
 
   const imageUploadHandler = () => {
@@ -47,6 +47,7 @@ export const ImageUpload = (props) => {
   const removePickedImageHandler = () => {
     setFile();
     setPreviewURL();
+    setFileIsValid(false);
     props.onInput(props.id, null, false);
   };
 
