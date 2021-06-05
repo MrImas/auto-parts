@@ -1,4 +1,5 @@
 import express from 'express';
+import { check, body } from 'express-validator';
 
 import * as paymentController from '../controllers/payment-controller.js';
 import { checkIsAdmin } from '../middlewares/check-admin.js';
@@ -8,7 +9,15 @@ const paymentRouter = express.Router();
 
 paymentRouter.use(checkAuth);
 
-paymentRouter.post('/', paymentController.createPayment);
+paymentRouter.post(
+  '/',
+  [
+    body('cart').isArray(),
+    body('cart.*.productId').notEmpty(),
+    body('cart.*.quantity').isInt({ min: 1 }),
+  ],
+  paymentController.createPayment
+);
 
 paymentRouter.use(checkIsAdmin);
 

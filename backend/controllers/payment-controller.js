@@ -1,9 +1,14 @@
 import { json } from 'body-parser';
+import { validationResult } from 'express-validator';
 import HttpError from '../models/http-errors.js';
 import Payment from '../models/payment.js';
 import Product from '../models/product.js';
 
 export const createPayment = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
   const { cart } = req.body;
   cart.map(async (productAndQuantityObj) => {
     let product;
@@ -21,9 +26,6 @@ export const createPayment = async (req, res, next) => {
           404
         )
       );
-    }
-    if (productAndQuantityObj.quantity < 1) {
-      return next(new HttpError('Could not make payment for product', 403));
     }
     return;
   });
