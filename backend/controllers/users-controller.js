@@ -112,6 +112,53 @@ export const login = async (req, res, next) => {
   });
 };
 
+export const setCart = async (req, res, next) => {
+  const { cart } = req.body;
+  let user;
+  try {
+    user = await User.findById(req.userData.userId);
+  } catch (err) {
+    return next(
+      new HttpError('Could not set the cart, please try again.', 500)
+    );
+  }
+  if (!user) {
+    return next(
+      new HttpError('Could not identify user, please try again', 403)
+    );
+  }
+  const cartUpdated = await Promise.all(
+    cart.map(async (productAndQuantityObj) => {
+      let product;
+      try {
+        product = await Product.findById(productAndQuantityObj.productId);
+      } catch (err) {
+        return next(
+          new HttpError('Could not update the cart, please try again', 500)
+        );
+      }
+      if (!product) {
+        return next(
+          new HttpError(
+            'Could not find one of the products in the cart, please try again',
+            404
+          )
+        );
+      }
+      return { ...productAndQuantityObj };
+    })
+  );
+  user.cart = cartUpdated;
+  try {
+    await user.save();
+  } catch (err) {
+    return next(
+      new HttpError('Could not update the cart, please try again.', 500)
+    );
+  }
+  res.json({ cart: user.cart.map((obj) => obj.toObject({ getters: true })) });
+};
+
 export const addToCart = async (req, res, next) => {
   const { pid } = req.body;
 

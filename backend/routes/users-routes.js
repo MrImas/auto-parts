@@ -22,6 +22,7 @@ usersRouter.use(checkAuth);
 
 usersRouter.get('/cart', usersController.getCart);
 usersRouter.patch('/addtocart', usersController.addToCart);
+usersRouter.patch('/setcart', usersController.setCart);
 usersRouter.delete('/removefromcart/:pid', usersController.removeFromCart);
 
 usersRouter.get('/history', usersController.getHistoryOfPayments);
