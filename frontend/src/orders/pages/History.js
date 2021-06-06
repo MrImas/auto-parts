@@ -25,7 +25,13 @@ const useStyles = makeStyles({
   },
 });
 
-const HEADERS = [' ', 'Payment ID', 'Date Of Purchase', 'Status'];
+const HEADERS = [
+  ' ',
+  'Payment ID',
+  'Date Of Purchase',
+  'Status',
+  'Total Price',
+];
 
 export const History = () => {
   const classes = useStyles();
@@ -69,13 +75,6 @@ export const History = () => {
                 </TableHead>
                 <TableBody>
                   {historyOfOrders.map((order) => (
-                    // <TableRow key={order.id}>
-                    //   <TableCell>{order.id}</TableCell>
-                    //   <TableCell>
-                    //     {order.createdAt && order.createdAt.split('T')[0]}
-                    //   </TableCell>
-                    //   <TableCell>{order.status}</TableCell>
-                    // </TableRow>
                     <OrderItem key={order.id} order={order} />
                   ))}
                 </TableBody>

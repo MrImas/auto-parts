@@ -25,7 +25,15 @@ const useStyles = makeStyles({
   },
 });
 
-const HEADERS = [' ', 'Payment ID', 'Date Of Purchase', 'Status', '', ''];
+const HEADERS = [
+  ' ',
+  'Payment ID',
+  'Date Of Purchase',
+  'Status',
+  'Price',
+  '',
+  '',
+];
 
 export const PaymentsApproval = () => {
   const classes = useStyles();
@@ -63,7 +71,7 @@ export const PaymentsApproval = () => {
       setHistoryOfOrders((prevOrders) =>
         prevOrders.map((order) => {
           if (order.id === oid) {
-            order.status = responseData.payments.status;
+            order.status = responseData.payment.status;
           }
           return order;
         })

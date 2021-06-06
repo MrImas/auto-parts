@@ -14,11 +14,11 @@ import BlockIcon from '@material-ui/icons/Block';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
 import { AuthContext } from '../../shared/context/auth-context';
-const HEADERS = ['Product ID', 'Quantity']; //'Total Price'
+const HEADERS = ['Product ID', 'Quantity', 'Price'];
 
 export const OrderItem = (props) => {
   const auth = useContext(AuthContext);
-  const { id, createdAt, status, cart } = props.order;
+  const { id, createdAt, status, cart, totalPrice } = props.order;
   const [open, setOpen] = useState(false);
 
   const rowClickedHandler = () => {
@@ -36,6 +36,7 @@ export const OrderItem = (props) => {
         <TableCell>{id}</TableCell>
         <TableCell>{createdAt && createdAt.split('T')[0]}</TableCell>
         <TableCell>{status}</TableCell>
+        <TableCell>{totalPrice}</TableCell>
         {auth.isAdmin && status === 'Awaiting' ? (
           <>
             <TableCell>
@@ -73,6 +74,7 @@ export const OrderItem = (props) => {
                     <TableRow key={prodAndQunatityObj.id}>
                       <TableCell>{prodAndQunatityObj.productId}</TableCell>
                       <TableCell>{prodAndQunatityObj.quantity}</TableCell>
+                      <TableCell>{prodAndQunatityObj.price}</TableCell>
                     </TableRow>
                   ))}
                 </TableHead>
