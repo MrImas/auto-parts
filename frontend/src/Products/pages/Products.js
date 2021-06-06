@@ -10,7 +10,7 @@ import { ProductList } from '../components/ProductList';
 
 export const Products = () => {
   const auth = useContext(AuthContext);
-  const [setCart] = useContext(CartContext);
+  const [cart, setCart] = useContext(CartContext);
   const [isLoading, error, sendHttpRequest, clearError] = useHttpClient();
   const [loadedProducts, setLoadedProducts] = useState();
 
@@ -24,7 +24,7 @@ export const Products = () => {
       } catch (err) {}
     };
     fetchProducts();
-  }, [sendHttpRequest]);
+  }, [sendHttpRequest, cart]);
 
   const deleteProductHandler = async (pid) => {
     try {

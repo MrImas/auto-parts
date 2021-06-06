@@ -13,7 +13,7 @@ export const ProductView = () => {
   const [isLoading, error, sendHttpRequest, clearError] = useHttpClient();
   const [product, setProduct] = useState();
   const auth = useContext(AuthContext);
-  const [setCart] = useContext(CartContext);
+  const [cart, setCart] = useContext(CartContext);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -25,7 +25,7 @@ export const ProductView = () => {
       } catch (err) {}
     };
     fetchProduct();
-  }, [sendHttpRequest, productId]);
+  }, [sendHttpRequest, productId, cart]);
 
   const buyingHandler = async (pid) => {
     try {
