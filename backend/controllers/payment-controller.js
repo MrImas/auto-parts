@@ -12,28 +12,35 @@ export const createPayment = async (req, res, next) => {
     return next(new HttpError('Invalid inputs, please check your data', 422));
   }
   const { cart } = req.body;
-  cart.map(async (productAndQuantityObj) => {
-    let product;
-    try {
-      product = await Product.findById(productAndQuantityObj.productId);
-    } catch (err) {
-      return next(
-        new HttpError('Could not make the payment, please try again', 500)
-      );
-    }
-    if (!product) {
-      return next(
-        new HttpError(
-          'Could not find one of the products in the cart, please try again',
-          404
-        )
-      );
-    }
-    return;
-  });
+  let totalPrice = 0;
+  const cartUpdated = await Promise.all(
+    cart.map(async (productAndQuantityObj) => {
+      let product;
+      try {
+        product = await Product.findById(productAndQuantityObj.productId);
+      } catch (err) {
+        return next(
+          new HttpError('Could not make the payment, please try again', 500)
+        );
+      }
+      if (!product) {
+        return next(
+          new HttpError(
+            'Could not find one of the products in the cart, please try again',
+            404
+          )
+        );
+      }
+      const priceForProductMulByQuan =
+        product.price * productAndQuantityObj.quantity;
+      totalPrice += priceForProductMulByQuan;
+      return { ...productAndQuantityObj, price: priceForProductMulByQuan };
+    })
+  );
   const payment = new Payment({
     userId: req.userData.userId,
-    cart,
+    cart: cartUpdated,
+    totalPrice,
   });
   try {
     const sess = await mongoose.startSession();
@@ -41,8 +48,8 @@ export const createPayment = async (req, res, next) => {
     await payment.save({ session: sess });
     const user = await User.findById(req.userData.userId);
     user.cart = [];
-    await user.save();
-    sess.commitTransaction();
+    await user.save({ session: sess });
+    await sess.commitTransaction();
   } catch (err) {
     return next(
       new HttpError('Could not make the payment, please try again', 500)

@@ -13,6 +13,7 @@ const paymentSchema = new Schema(
           ref: 'Product',
         },
         quantity: { type: Number, required: true, min: 1 },
+        price: { type: Number, required: true, min: 0 },
       },
     ],
     status: {
@@ -21,6 +22,7 @@ const paymentSchema = new Schema(
       required: true,
       default: 'Awaiting',
     },
+    totalPrice: { type: Number, required: true, min: 0 },
   },
   { timestamps: true }
 );

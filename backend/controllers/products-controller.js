@@ -48,7 +48,7 @@ export const createProduct = async (req, res, next) => {
     sess.startTransaction();
     await createdProduct.save({ session: sess });
     categoryOfProduct.products.push(createdProduct);
-    await categoryOfProduct.save();
+    await categoryOfProduct.save({ session: sess });
     await sess.commitTransaction();
   } catch (err) {
     return next(new HttpError('Could not add product, please try again.', 500));
