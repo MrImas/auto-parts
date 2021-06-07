@@ -70,7 +70,6 @@ export const Auth = () => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log(authFormState.inputs);
     if (isLoginMode) {
       try {
         const responseData = await sendHttpRequest(
