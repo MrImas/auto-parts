@@ -9,6 +9,7 @@ import User from '../models/user.js';
 export const createPayment = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log(errors);
     return next(new HttpError('Invalid inputs, please check your data', 422));
   }
   const { cart } = req.body;

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 
 import { AuthContext } from '../../shared/context/auth-context';
@@ -7,27 +8,43 @@ import CartContext from '../../shared/context/cart-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import { ErrorModal } from '../../shared/components/UIElements/ErrorModal';
 import { LoadingSpinner } from '../../shared/components/UIElements/LoadingSpinner';
+import Button from '../../shared/components/FormElements/Button';
 
 export const Cart = () => {
   const auth = useContext(AuthContext);
   const [cart, setCart] = useContext(CartContext);
   const [isLoading, error, sendHttpRequest, clearError] = useHttpClient();
   const [products, setProducts] = useState();
+  const [totalPrice, setTotalPrice] = useState(0);
+  const history = useHistory();
 
   useEffect(() => {
     const fetchProducts = async () => {
       const [...products] = await Promise.all(
-        cart.map((obj) =>
-          sendHttpRequest(
-            `http://localhost:5000/api/products/${obj.productId}`,
-            'GET',
-            {
-              Authorization: `Bearer ${auth.token}`,
-            }
-          )
+        cart.map(
+          async (obj) =>
+            await sendHttpRequest(
+              `http://localhost:5000/api/products/${obj.productId}`,
+              'GET',
+              {
+                Authorization: `Bearer ${auth.token}`,
+              }
+            )
         )
       );
       setProducts(products);
+      if (products.length > 0) {
+        setTotalPrice(
+          cart
+            .map((productQuantityObj, indexOfProduct) => {
+              return (
+                productQuantityObj.quantity *
+                products[indexOfProduct].product.price
+              );
+            })
+            .reduce((totalPrice, currPrice) => (totalPrice += currPrice))
+        );
+      }
     };
     fetchProducts();
   }, [sendHttpRequest, auth.token, cart]);
@@ -95,6 +112,29 @@ export const Cart = () => {
     );
   };
 
+  const orderCartHandler = async () => {
+    try {
+      await sendHttpRequest(
+        `http://localhost:5000/api/payments`,
+        'POST',
+        {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
+        },
+        JSON.stringify({
+          cart: [
+            {
+              productId: cart[0].productId,
+              quantity: cart[0].quantity,
+            },
+          ],
+        })
+      );
+      setCart([]);
+      history.push('/');
+    } catch (err) {}
+  };
+
   return (
     <div>
       <ErrorModal error={error} clearError={clearError} />
@@ -113,8 +153,20 @@ export const Cart = () => {
           />
         ))}
       {products && (
-        <div>
-          <Typography variant='h3'>Total Price: ${cart.totalPrice}</Typography>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography variant='h3'>Total Price: ${totalPrice}</Typography>
+          <Button
+            disabled={cart.length === 0 ? true : false}
+            onClick={orderCartHandler}
+          >
+            Order
+          </Button>
         </div>
       )}
     </div>
