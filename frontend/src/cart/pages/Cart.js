@@ -122,12 +122,10 @@ export const Cart = () => {
           Authorization: `Bearer ${auth.token}`,
         },
         JSON.stringify({
-          cart: [
-            {
-              productId: cart[0].productId,
-              quantity: cart[0].quantity,
-            },
-          ],
+          cart: cart.map((obj) => ({
+            productId: obj.productId,
+            quantity: obj.quantity,
+          })),
         })
       );
       setCart([]);
