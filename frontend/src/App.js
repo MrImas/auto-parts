@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import {
   BrowserRouter as Router,
   Redirect,
@@ -8,17 +8,34 @@ import {
 
 import { CartProvider } from './shared/context/cart-context';
 import { AuthContext } from './shared/context/auth-context';
-import { Categories } from './categories/pages/Categories';
-import { CreateProduct } from './Products/pages/CreateProduct';
-import { Products } from './Products/pages/Products';
-import { UpdateProduct } from './Products/pages/UpdateProduct';
 import { MainNavigation } from './shared/components/Navigation/MainNavigation';
-import { Auth } from './users/pages/Auth';
 import { useAuth } from './shared/hooks/auth-hook';
-import { ProductView } from './Products/pages/ProductView';
-import { Cart } from './cart/pages/Cart';
-import { History } from './orders/pages/History';
-import { PaymentsApproval } from './orders/pages/PaymentsApproval';
+import { LoadingSpinner } from './shared/components/UIElements/LoadingSpinner';
+// import { Categories } from './categories/pages/Categories';
+// import { CreateProduct } from './Products/pages/CreateProduct';
+// import { Products } from './Products/pages/Products';
+// import { UpdateProduct } from './Products/pages/UpdateProduct';
+// import { Auth } from './users/pages/Auth';
+// import { ProductView } from './Products/pages/ProductView';
+// import { Cart } from './cart/pages/Cart';
+// import { History } from './orders/pages/History';
+// import { PaymentsApproval } from './orders/pages/PaymentsApproval';
+
+const Categories = React.lazy(() => import('./categories/pages/Categories'));
+const CreateProduct = React.lazy(() =>
+  import('./Products/pages/CreateProduct')
+);
+const Products = React.lazy(() => import('./Products/pages/Products'));
+const UpdateProduct = React.lazy(() =>
+  import('./Products/pages/UpdateProduct')
+);
+const Auth = React.lazy(() => import('./users/pages/Auth'));
+const ProductView = React.lazy(() => import('./Products/pages/ProductView'));
+const Cart = React.lazy(() => import('./cart/pages/Cart'));
+const History = React.lazy(() => import('./orders/pages/History'));
+const PaymentsApproval = React.lazy(() =>
+  import('./orders/pages/PaymentsApproval')
+);
 
 const App = () => {
   const [isLoggedIn, isAdmin, userId, token, login, logout] = useAuth();
@@ -76,7 +93,9 @@ const App = () => {
       <CartProvider token={token}>
         <Router>
           <MainNavigation />
-          <main>{routes}</main>
+          <main>
+            <Suspense fallback={<LoadingSpinner />}>{routes}</Suspense>
+          </main>
         </Router>
       </CartProvider>
     </AuthContext.Provider>
