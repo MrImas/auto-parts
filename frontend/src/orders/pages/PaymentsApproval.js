@@ -44,7 +44,7 @@ export const PaymentsApproval = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       const responseData = await sendHttpRequest(
-        `http://localhost:5000/api/payments`,
+        `${process.env.REACT_APP_BACKEND_URL}/payments`,
         'GET',
         {
           Authorization: `Bearer ${auth.token}`,
@@ -58,7 +58,7 @@ export const PaymentsApproval = () => {
   const statusHandler = async (oid, status) => {
     try {
       const responseData = await sendHttpRequest(
-        `http://localhost:5000/api/payments/${oid}`,
+        `${process.env.REACT_APP_BACKEND_URL}/payments/${oid}`,
         'PATCH',
         {
           'Content-Type': 'application/json',

@@ -24,7 +24,7 @@ export const Cart = () => {
         cart.map(
           async (obj) =>
             await sendHttpRequest(
-              `http://localhost:5000/api/products/${obj.productId}`,
+              `${process.env.REACT_APP_BACKEND_URL}/products/${obj.productId}`,
               'GET',
               {
                 Authorization: `Bearer ${auth.token}`,
@@ -58,7 +58,7 @@ export const Cart = () => {
       return cartUpdated;
     });
     await sendHttpRequest(
-      `http://localhost:5000/api/users/setcart`,
+      `${process.env.REACT_APP_BACKEND_URL}/users/setcart`,
       'PATCH',
       {
         'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export const Cart = () => {
       });
     });
     await sendHttpRequest(
-      `http://localhost:5000/api/users/addtocart`,
+      `${process.env.REACT_APP_BACKEND_URL}/users/addtocart`,
       'PATCH',
       {
         'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ export const Cart = () => {
       });
     });
     await sendHttpRequest(
-      `http://localhost:5000/api/users/removefromcart/${pid}`,
+      `${process.env.REACT_APP_BACKEND_URL}/users/removefromcart/${pid}`,
       'DELETE',
       {
         Authorization: `Bearer ${auth.token}`,
@@ -115,7 +115,7 @@ export const Cart = () => {
   const orderCartHandler = async () => {
     try {
       await sendHttpRequest(
-        `http://localhost:5000/api/payments`,
+        `${process.env.REACT_APP_BACKEND_URL}/payments`,
         'POST',
         {
           'Content-Type': 'application/json',

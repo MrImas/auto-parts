@@ -19,7 +19,7 @@ export const ProductView = () => {
     const fetchProduct = async () => {
       try {
         const responseData = await sendHttpRequest(
-          `http://localhost:5000/api/products/${productId}`
+          `${process.env.REACT_APP_BACKEND_URL}/products/${productId}`
         );
         setProduct(responseData.product);
       } catch (err) {}
@@ -30,7 +30,7 @@ export const ProductView = () => {
   const buyingHandler = async (pid) => {
     try {
       const responseData = await sendHttpRequest(
-        'http://localhost:5000/api/users/addtocart',
+        `${process.env.REACT_APP_BACKEND_URL}/users/addtocart`,
         'PATCH',
         {
           'Content-Type': 'application/json',

@@ -73,7 +73,7 @@ export const Auth = () => {
     if (isLoginMode) {
       try {
         const responseData = await sendHttpRequest(
-          `http://localhost:5000/api/users/login`,
+          `${process.env.REACT_APP_BACKEND_URL}/users/login`,
           'POST',
           {
             'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export const Auth = () => {
     } else {
       try {
         const responseData = await sendHttpRequest(
-          'http://localhost:5000/api/users/signup',
+          process.env.REACT_APP_BACKEND_URL + '/users/signup',
           'POST',
           {
             'Content-Type': 'application/json',

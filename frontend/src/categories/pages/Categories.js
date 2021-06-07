@@ -16,7 +16,7 @@ export const Categories = () => {
   const addCategoryHandler = async (categoryName) => {
     try {
       const responseData = await sendHttpRequest(
-        'http://localhost:5000/api/categories',
+        process.env.REACT_APP_BACKEND_URL + '/categories',
         'POST',
         {
           'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ export const Categories = () => {
   const deleteCategoryHandler = async (categoryId) => {
     try {
       const responseData = await sendHttpRequest(
-        `http://localhost:5000/api/categories/${categoryId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/categories/${categoryId}`,
         'DELETE',
         {
           Authorization: `Bearer ${auth.token}`,
@@ -51,7 +51,7 @@ export const Categories = () => {
     const fetchCategories = async () => {
       try {
         const responseData = await sendHttpRequest(
-          'http://localhost:5000/api/categories'
+          process.env.REACT_APP_BACKEND_URL + '/categories'
         );
         setCategories(responseData.categories);
       } catch (err) {}

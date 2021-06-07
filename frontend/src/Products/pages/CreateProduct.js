@@ -52,7 +52,7 @@ export const CreateProduct = () => {
     const fetchCategories = async () => {
       try {
         const responseData = await sendHttpRequest(
-          'http://localhost:5000/api/categories'
+          process.env.REACT_APP_BACKEND_URL + '/categories'
         );
         setLoadedCategories(responseData.categories);
       } catch (err) {}
@@ -71,7 +71,7 @@ export const CreateProduct = () => {
       formData.append('category', formState.inputs.category.value);
       formData.append('image', formState.inputs.image.value);
       await sendHttpRequest(
-        'http://localhost:5000/api/products',
+        process.env.REACT_APP_BACKEND_URL + '/products',
         'POST',
         {
           Authorization: `Bearer ${auth.token} `,

@@ -72,7 +72,7 @@ export const ProductFullView = (props) => {
       <CardMedia
         component='img'
         className={classes.image}
-        image={`http://localhost:5000/${image}`}
+        image={`${process.env.REACT_APP_ASSET_URL}/${image}`}
         title={props.title}
       />
       <CardContent className={classes.details}>

@@ -42,7 +42,7 @@ export const History = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       const responseData = await sendHttpRequest(
-        `http://localhost:5000/api/users/history`,
+        `${process.env.REACT_APP_BACKEND_URL}/users/history`,
         'GET',
         {
           Authorization: `Bearer ${auth.token}`,

@@ -12,11 +12,14 @@ const CartProvider = (props) => {
     if (props.token) {
       const fetchCart = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/api/users/cart`, {
-            headers: {
-              Authorization: `Bearer ${props.token}`,
-            },
-          });
+          const response = await fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/users/cart`,
+            {
+              headers: {
+                Authorization: `Bearer ${props.token}`,
+              },
+            }
+          );
           const responseData = await response.json();
           setCart(responseData.cart);
         } catch (err) {

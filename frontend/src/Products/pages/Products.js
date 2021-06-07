@@ -18,7 +18,7 @@ export const Products = () => {
     const fetchProducts = async () => {
       try {
         const responseData = await sendHttpRequest(
-          'http://localhost:5000/api/products'
+          process.env.REACT_APP_BACKEND_URL + '/products'
         );
         setLoadedProducts(responseData.products);
       } catch (err) {}
@@ -29,7 +29,7 @@ export const Products = () => {
   const deleteProductHandler = async (pid) => {
     try {
       await sendHttpRequest(
-        `http://localhost:5000/api/products/${pid}`,
+        `${process.env.REACT_APP_BACKEND_URL}/products/${pid}`,
         'DELETE',
         {
           Authorization: `Bearer ${auth.token}`,
@@ -44,7 +44,7 @@ export const Products = () => {
   const addToCartHandler = async (pid) => {
     try {
       const responseData = await sendHttpRequest(
-        'http://localhost:5000/api/users/addtocart',
+        `${process.env.REACT_APP_BACKEND_URL}/users/addtocart`,
         'PATCH',
         {
           'Content-Type': 'application/json',

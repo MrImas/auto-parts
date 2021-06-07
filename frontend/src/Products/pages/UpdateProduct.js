@@ -54,7 +54,7 @@ export const UpdateProduct = () => {
     const fetchCategories = async () => {
       try {
         const responseData = await sendHttpRequest(
-          'http://localhost:5000/api/categories'
+          process.env.REACT_APP_BACKEND_URL + '/categories'
         );
         setLoadedCategories(responseData.categories);
       } catch (err) {}
@@ -66,7 +66,7 @@ export const UpdateProduct = () => {
     const fetchProduct = async () => {
       try {
         const responseData = await sendHttpRequest(
-          `http://localhost:5000/api/products/${productId}`
+          `${process.env.REACT_APP_BACKEND_URL}/products/${productId}`
         );
         const product = responseData.product;
         setDataHandler(
@@ -115,7 +115,7 @@ export const UpdateProduct = () => {
     formData.append('image', formState.inputs.image.value);
     try {
       await sendHttpRequest(
-        `http://localhost:5000/api/products/${productId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/products/${productId}`,
         'PATCH',
         {
           Authorization: `Bearer ${auth.token}`,
@@ -205,7 +205,7 @@ export const UpdateProduct = () => {
               <div className='product-form__file-input'>
                 <ImageUpload
                   id='image'
-                  previewURL={`http://localhost:5000/${formState.inputs.image.value}`}
+                  previewURL={`${process.env.REACT_APP_ASSET_URL}/${formState.inputs.image.value}`}
                   fileIsValid
                   onInput={inputHandler}
                   errorText={'Please provide an image.'}
