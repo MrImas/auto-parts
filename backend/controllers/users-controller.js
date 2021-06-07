@@ -1,11 +1,14 @@
 import * as bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
+import dotenv from 'dotenv';
 
 import User from '../models/user.js';
 import Product from '../models/product.js';
 import Payment from '../models/payment.js';
 import HttpError from '../models/http-errors.js';
+
+dotenv.config();
 
 export const signup = async (req, res, next) => {
   const errors = validationResult(req);
@@ -50,7 +53,7 @@ export const signup = async (req, res, next) => {
 
   let token;
   try {
-    token = jwt.sign({ userId: newUser.id }, 'private_secret_dont_share', {
+    token = jwt.sign({ userId: newUser.id }, process.env.JWT_KEY, {
       expiresIn: '1h',
     });
   } catch (err) {
@@ -95,7 +98,7 @@ export const login = async (req, res, next) => {
 
   let token;
   try {
-    token = jwt.sign({ userId: existingUser.id }, 'private_secret_dont_share', {
+    token = jwt.sign({ userId: existingUser.id }, process.env.JWT_KEY, {
       expiresIn: '1h',
     });
   } catch (err) {

@@ -3,12 +3,15 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import path from 'path';
 import fs from 'fs';
+import dotenv from 'dotenv';
 
 import productsRouter from './routes/products-routes.js';
 import HttpError from './models/http-errors.js';
 import categoriesRouter from './routes/categories-routes.js';
 import usersRouter from './routes/users-routes.js';
 import paymentRouter from './routes/payment-router.js';
+
+dotenv.config();
 
 const app = express();
 
@@ -48,8 +51,8 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    'mongodb+srv://tester:tester123@cluster0.3naae.mongodb.net/autoParts?retryWrites=true&w=majority',
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.3naae.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
     { useNewUrlParser: true }
   )
-  .then(app.listen(5000))
+  .then(app.listen(process.env.PORT || 5000))
   .catch((err) => console.log(err));
