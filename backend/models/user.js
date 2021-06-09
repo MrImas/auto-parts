@@ -7,6 +7,8 @@ const userSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minLength: 6 },
+  password1: { type: String, required: true, minLength: 6 },
+  password2: { type: String, required: true, minLength: 6 },
   role: { type: Number, required: true, default: 0 }, //role: 0 => regular user, role: 1 => user is admin
   cart: [
     {
@@ -18,6 +20,7 @@ const userSchema = new Schema({
       quantity: { type: Number, required: true, min: 1 },
     },
   ],
+  numOfAttempts: { type: Number, required: true, default: 0, min: 0, max: 3 },
 });
 
 userSchema.plugin(uniqueValidator);
