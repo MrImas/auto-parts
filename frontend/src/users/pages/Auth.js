@@ -136,6 +136,7 @@ export const Auth = () => {
           />
           <Input
             id='password'
+            type='password'
             label='Password'
             validators={[VALIDATOR_MINLENGTH(6)]}
             errorText='Please enter a valid password of at least 6 characters'
