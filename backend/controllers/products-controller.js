@@ -9,7 +9,7 @@ import Category from '../models/category.js';
 export const getProducts = async (req, res, next) => {
   let products;
   try {
-    products = await Product.find();
+    products = await Product.find({});
   } catch (err) {
     return next(
       new HttpError('Could not fetch products, please try again', 500)
