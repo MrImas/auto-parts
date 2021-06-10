@@ -15,6 +15,7 @@ import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
 import { LoadingSpinner } from '../../shared/components/UIElements/LoadingSpinner';
 import { ErrorModal } from '../../shared/components/UIElements/ErrorModal';
+import { Password } from '../../shared/components/FormElements/Password';
 
 const useStyles = makeStyles({
   root: {
@@ -31,16 +32,19 @@ const useStyles = makeStyles({
 
 export const Auth = () => {
   const classes = useStyles();
-  const [authFormState, inputHandler, setDataHandler] = useForm({
-    email: {
-      value: '',
-      isValid: false,
+  const [authFormState, inputHandler, setDataHandler] = useForm(
+    {
+      email: {
+        value: '',
+        isValid: false,
+      },
+      password: {
+        value: '',
+        isValid: false,
+      },
     },
-    password: {
-      value: '',
-      isValid: false,
-    },
-  });
+    false
+  );
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [isLoading, error, sendHttpRequest, clearError] = useHttpClient();
 
@@ -134,10 +138,9 @@ export const Auth = () => {
             errorText='Please enter a valid email address'
             onInput={inputHandler}
           />
-          <Input
+          <Password
             id='password'
-            type='password'
-            label='Password'
+            doublePassCheck={!isLoginMode}
             validators={[VALIDATOR_MINLENGTH(6)]}
             errorText='Please enter a valid password of at least 6 characters'
             onInput={inputHandler}

@@ -93,9 +93,10 @@ const InputCustomized = (props) => {
       rows={props.rows || 1}
       onBlur={onBlurHandler}
       onChange={changeInputHandler}
-      error={!inputState.isValid && inputState.isTouched}
+      error={(!inputState.isValid && inputState.isTouched) || props.error}
       helperText={
-        !inputState.isValid && inputState.isTouched && props.errorText
+        (!inputState.isValid && inputState.isTouched && props.errorText) ||
+        (props.error && props.errorText)
       }
       variant={props.variant || 'standard'}
     />
