@@ -18,18 +18,23 @@ export const Password = (props) => {
     false
   );
 
-  const { onInput, id } = props;
+  const { onInput, id, doublePassCheck } = props;
 
   useEffect(() => {
-    onInput(
-      id,
-      formState.inputs.pass1.value,
-      formState.inputs.pass1.isValid &&
-        formState.inputs.pass1.value === formState.inputs.pass2.value
-    );
+    if (doublePassCheck) {
+      onInput(
+        id,
+        formState.inputs.pass1.value,
+        formState.inputs.pass1.isValid &&
+          formState.inputs.pass1.value === formState.inputs.pass2.value
+      );
+    } else {
+      onInput(id, formState.inputs.pass1.value, formState.inputs.pass1.isValid);
+    }
   }, [
     onInput,
     id,
+    doublePassCheck,
     formState.inputs.pass1.isValid,
     formState.inputs.pass1.value,
     formState.inputs.pass2.value,

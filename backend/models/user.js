@@ -20,7 +20,7 @@ const userSchema = new Schema({
       quantity: { type: Number, required: true, min: 1 },
     },
   ],
-  numOfAttempts: { type: Number, required: true, default: 0, min: 0, max: 3 },
+  numOfAttempts: { type: Number, required: true, default: 3, min: 0, max: 3 },
 });
 
 userSchema.plugin(uniqueValidator);

@@ -88,12 +88,21 @@ export const login = async (req, res, next) => {
     return next(new HttpError('Could not login, please try again', 500));
   }
   if (!isValidPassword) {
-    return next(
-      new HttpError(
-        'Could not identify user, credentials seem to be wrong',
-        403
-      )
-    );
+    let invalidCredentialsMessage =
+      'Could not identify user, credentials seem to be wrong';
+    existingUser.numOfAttempts--;
+    try {
+      invalidCredentialsMessage = `You have ${existingUser.numOfAttempts} more attempts. ${invalidCredentialsMessage}`;
+      await existingUser.save();
+    } catch (err) {
+      return next(new HttpError('Could not login, please try again', 500));
+    }
+
+    if (existingUser.numOfAttempts === 0) {
+      invalidCredentialsMessage =
+        'You failed login in 3 attempts. ' + invalidCredentialsMessage;
+    }
+    return next(new HttpError(invalidCredentialsMessage, 403));
   }
 
   let token;
