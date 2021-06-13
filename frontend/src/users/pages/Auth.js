@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Card } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import ReCaptchaV2 from 'react-google-recaptcha';
 
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import { useForm } from '../../shared/hooks/product-form-hook';
@@ -155,6 +156,9 @@ export const Auth = () => {
             errorText='Please enter a valid password of at least 6 characters'
             onInput={inputHandler}
           />
+          {!isLoginMode && (
+            <ReCaptchaV2 sitekey={process.env.REACT_APP_SITE_KEY} />
+          )}
           <Button type='submit' disabled={!authFormState.isValid}>
             {isLoginMode ? 'LOGIN' : 'SIGNUP'}
           </Button>
