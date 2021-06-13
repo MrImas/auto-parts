@@ -8,31 +8,38 @@ export const useAuth = () => {
   const [expirationDate, setExpirationDate] = useState();
   const [isAdmin, setIsAdmin] = useState(false);
   const [token, setToken] = useState();
+  const [userName, setUserName] = useState('guest');
 
-  const login = useCallback((uid, token, isAdmin, expireIn) => {
-    setIsLoggedIn(true);
-    setUserId(uid);
-    setIsAdmin(isAdmin);
-    setToken(token);
-    const expirationDate =
-      expireIn || new Date(new Date().getTime() + 1000 * 60 * 60);
-    setExpirationDate(expirationDate);
-    localStorage.setItem(
-      'userData',
-      JSON.stringify({
-        userId: uid,
-        token,
-        isAdmin,
-        expirationDate: expirationDate.toISOString(),
-      })
-    );
-  }, []);
+  const login = useCallback(
+    (uid, token, isAdmin, userName = 'guest', expireIn) => {
+      setIsLoggedIn(true);
+      setUserId(uid);
+      setIsAdmin(isAdmin);
+      setToken(token);
+      setUserName(userName);
+      const expirationDate =
+        expireIn || new Date(new Date().getTime() + 1000 * 60 * 60);
+      setExpirationDate(expirationDate);
+      localStorage.setItem(
+        'userData',
+        JSON.stringify({
+          userId: uid,
+          token,
+          isAdmin,
+          userName,
+          expirationDate: expirationDate.toISOString(),
+        })
+      );
+    },
+    []
+  );
 
   const logout = useCallback(() => {
     setIsLoggedIn(false);
     setIsAdmin(false);
     setUserId(null);
     setToken(false);
+    setUserName('guest');
     setExpirationDate(null);
     localStorage.removeItem('userData');
   }, []);
@@ -43,12 +50,14 @@ export const useAuth = () => {
       userData &&
       userData.token &&
       userData.userId &&
+      userData.userName &&
       userData.expirationDate
     ) {
       login(
         userData.userId,
         userData.token,
         userData.isAdmin,
+        userData.userName,
         new Date(userData.expirationDate)
       );
     }
@@ -63,5 +72,5 @@ export const useAuth = () => {
     }
   }, [token, expirationDate, logout]);
 
-  return [isLoggedIn, isAdmin, userId, token, login, logout];
+  return [isLoggedIn, isAdmin, userId, token, login, logout, userName];
 };

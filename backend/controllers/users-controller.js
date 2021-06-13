@@ -119,6 +119,7 @@ export const login = async (req, res, next) => {
   res.json({
     message: 'user logged in',
     userId: existingUser.id,
+    userName: existingUser.name,
     role: existingUser.role,
     token,
   });

@@ -38,7 +38,8 @@ import { PaymentsApproval } from './orders/pages/PaymentsApproval';
 // );
 
 const App = () => {
-  const [isLoggedIn, isAdmin, userId, token, login, logout] = useAuth();
+  const [isLoggedIn, isAdmin, userId, token, login, logout, userName] =
+    useAuth();
   let routes;
 
   if (!isLoggedIn) {
@@ -88,6 +89,7 @@ const App = () => {
         token,
         login,
         logout,
+        userName,
       }}
     >
       <CartProvider token={token}>
