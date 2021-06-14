@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import path from 'path';
 import fs from 'fs';
 import dotenv from 'dotenv';
+import https from 'https';
 
 import productsRouter from './routes/products-routes.js';
 import HttpError from './models/http-errors.js';
@@ -49,10 +50,20 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || 'An Unknown error has occurred!' });
 });
 
+const sslServer = https.createServer(
+  {
+    key: fs.readFileSync(
+      path.join(path.resolve(), 'cert', 'localhost-key.pem')
+    ),
+    cert: fs.readFileSync(path.join(path.resolve(), 'cert', 'localhost.pem')),
+  },
+  app
+);
+
 mongoose
   .connect(
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.3naae.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
     { useNewUrlParser: true }
   )
-  .then(app.listen(process.env.PORT || 5000))
+  .then(sslServer.listen(process.env.PORT || 5000))
   .catch((err) => console.log(err));
