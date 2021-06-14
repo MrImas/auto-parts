@@ -62,7 +62,14 @@ export const signup = async (req, res, next) => {
     );
   }
 
-  res.status(201).json({ userId: newUser.id, role: newUser.role, token });
+  res
+    .status(201)
+    .json({
+      userId: newUser.id,
+      role: newUser.role,
+      token,
+      userName: newUser.name,
+    });
 };
 
 export const login = async (req, res, next) => {

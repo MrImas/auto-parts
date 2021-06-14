@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Typography } from '@material-ui/core';
 
 import Button from '../FormElements/Button';
 import CartContext from '../../context/cart-context';
@@ -13,6 +13,9 @@ export const NavLinks = () => {
   const [cart] = useContext(CartContext);
   return (
     <ul className='nav-links'>
+      <li>
+        <Typography variant='h6'>Hello {auth.userName}</Typography>
+      </li>
       <li>
         {auth.isLoggedIn && (
           <NavLink to='/profile' exact>
