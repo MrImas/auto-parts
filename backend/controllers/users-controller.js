@@ -125,6 +125,47 @@ export const login = async (req, res, next) => {
   });
 };
 
+export const changePassword = async (req, res, next) => {
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   return next(new HttpError('Invalid inputs, please check your data', 422));
+  // }
+  const { password } = req.body;
+  let user;
+  try {
+    user = await User.findById(req.userData.userId);
+  } catch (err) {
+    return next(
+      new HttpError('Changing password failed, please try again.', 500)
+    );
+  }
+  if (!user) {
+    return next(
+      new HttpError(
+        'Could not change password for provided user, please try again',
+        404
+      )
+    );
+  }
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(password, 12);
+  } catch (err) {
+    return next(
+      new HttpError('Could not sign up user, please try again.', 500)
+    );
+  }
+  try {
+    user.password = hashedPassword;
+    await user.save();
+  } catch (err) {
+    return next(
+      new HttpError('Changing password failed, please try again later.', 500)
+    );
+  }
+  res.json({ message: 'password has changed!' });
+};
+
 export const setCart = async (req, res, next) => {
   const { cart } = req.body;
   let user;

@@ -20,6 +20,7 @@ usersRouter.post(
 
 usersRouter.use(checkAuth);
 
+usersRouter.patch('/profile', usersController.changePassword);
 usersRouter.get('/cart', usersController.getCart);
 usersRouter.patch('/addtocart', usersController.addToCart);
 usersRouter.patch('/setcart', usersController.setCart);
