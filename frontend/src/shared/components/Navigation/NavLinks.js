@@ -14,6 +14,13 @@ export const NavLinks = () => {
   return (
     <ul className='nav-links'>
       <li>
+        {auth.isLoggedIn && (
+          <NavLink to='/profile' exact>
+            CHANGE PASSWORD
+          </NavLink>
+        )}
+      </li>
+      <li>
         <NavLink to='/' exact>
           SHOP
         </NavLink>

@@ -130,20 +130,37 @@ export const changePassword = async (req, res, next) => {
   // if (!errors.isEmpty()) {
   //   return next(new HttpError('Invalid inputs, please check your data', 422));
   // }
-  const { password } = req.body;
-  let user;
+  const { email, oldPassword, password } = req.body;
+  let userById, userByEmail;
   try {
-    user = await User.findById(req.userData.userId);
+    userById = await User.findById(req.userData.userId);
+    userByEmail = await User.findOne({ email });
   } catch (err) {
     return next(
       new HttpError('Changing password failed, please try again.', 500)
     );
   }
-  if (!user) {
+  if (!userById || !userByEmail) {
     return next(
       new HttpError(
         'Could not change password for provided user, please try again',
         404
+      )
+    );
+  }
+  let isValidOldPassword;
+  try {
+    isValidOldPassword = await bcrypt.compare(oldPassword, userById.password);
+  } catch (err) {
+    return next(
+      new HttpError('Could not change password, please try again', 500)
+    );
+  }
+  if (!isValidOldPassword) {
+    return next(
+      new HttpError(
+        'Could not identify user, credentials seem to be wrong',
+        403
       )
     );
   }
@@ -152,12 +169,12 @@ export const changePassword = async (req, res, next) => {
     hashedPassword = await bcrypt.hash(password, 12);
   } catch (err) {
     return next(
-      new HttpError('Could not sign up user, please try again.', 500)
+      new HttpError('Could not change password please try again.', 500)
     );
   }
   try {
-    user.password = hashedPassword;
-    await user.save();
+    userById.password = hashedPassword;
+    await userById.save();
   } catch (err) {
     return next(
       new HttpError('Changing password failed, please try again later.', 500)

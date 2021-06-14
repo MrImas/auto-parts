@@ -20,6 +20,7 @@ import { ProductView } from './Products/pages/ProductView';
 import { Cart } from './cart/pages/Cart';
 import { History } from './orders/pages/History';
 import { PaymentsApproval } from './orders/pages/PaymentsApproval';
+import { ChangePassword } from './users/components/ChangePassword';
 
 // const Categories = React.lazy(() => import('./categories/pages/Categories'));
 // const CreateProduct = React.lazy(() =>
@@ -59,6 +60,9 @@ const App = () => {
       <Switch>
         <Route path='/' exact>
           <Products />
+        </Route>
+        <Route path='/profile' exact>
+          <ChangePassword />
         </Route>
         <Route path='/category' exact>
           <Categories />
