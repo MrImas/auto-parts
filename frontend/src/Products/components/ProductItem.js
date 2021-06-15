@@ -53,7 +53,17 @@ export const ProductItem = (props) => {
           <Typography color='secondary' variant='h6'>
             ${props.price}
           </Typography>
-          <Typography variant='body1'>{props.description}</Typography>
+          <Typography
+            variant='body1'
+            style={{
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical',
+            }}
+          >
+            {props.description}
+          </Typography>
         </CardContent>
         <CardActions className={classes.cardActionsContainer}>
           <Button
