@@ -51,12 +51,26 @@ export const Cart = () => {
 
   const removeProductFromCartHandler = async (pid) => {
     let cartUpdated;
+    let quantityOfRemovedProduct = 0;
     setCart((prevCart) => {
-      cartUpdated = prevCart.filter(
-        (prodQuanObj) => prodQuanObj.productId !== pid
-      );
+      cartUpdated = prevCart.filter((prodQuanObj) => {
+        if (prodQuanObj.productId === pid) {
+          quantityOfRemovedProduct = prodQuanObj.quantity;
+        }
+        return prodQuanObj.productId !== pid;
+      });
       return cartUpdated;
     });
+    const productToRemove = products.find(
+      (elem) => elem.product.id === pid
+    ).product;
+    const priceOfRemovedProducts =
+      quantityOfRemovedProduct * productToRemove.price;
+    setTotalPrice((prevPrice) =>
+      prevPrice - priceOfRemovedProducts > 0
+        ? prevPrice - priceOfRemovedProducts
+        : 0
+    );
     await sendHttpRequest(
       `${process.env.REACT_APP_BACKEND_URL}/users/setcart`,
       'PATCH',
