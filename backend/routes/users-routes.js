@@ -3,9 +3,9 @@ import { check, body } from 'express-validator';
 
 import * as usersController from '../controllers/users-controller.js';
 import { checkAuth } from '../middlewares/check-auth.js';
+import { checkIsSQLInjection } from '../middlewares/check-sql-injection.js';
 
 const usersRouter = express.Router();
-
 usersRouter.post(
   '/login',
   [
