@@ -17,6 +17,11 @@ export const NavLinks = () => {
         <Typography variant='h6'>Hello {auth.userName}</Typography>
       </li>
       <li>
+        <NavLink to='/' exact>
+          HOME
+        </NavLink>
+      </li>
+      <li>
         {auth.isLoggedIn && (
           <NavLink to='/profile' exact>
             CHANGE PASSWORD
@@ -24,7 +29,7 @@ export const NavLinks = () => {
         )}
       </li>
       <li>
-        <NavLink to='/' exact>
+        <NavLink to='/shop' exact>
           SHOP
         </NavLink>
       </li>

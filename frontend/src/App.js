@@ -21,22 +21,7 @@ import { Cart } from './cart/pages/Cart';
 import { History } from './orders/pages/History';
 import { PaymentsApproval } from './orders/pages/PaymentsApproval';
 import { ChangePassword } from './users/components/ChangePassword';
-
-// const Categories = React.lazy(() => import('./categories/pages/Categories'));
-// const CreateProduct = React.lazy(() =>
-//   import('./Products/pages/CreateProduct')
-// );
-// const Products = React.lazy(() => import('./Products/pages/Products'));
-// const UpdateProduct = React.lazy(() =>
-//   import('./Products/pages/UpdateProduct')
-// );
-// const Auth = React.lazy(() => import('./users/pages/Auth'));
-// const ProductView = React.lazy(() => import('./Products/pages/ProductView'));
-// const Cart = React.lazy(() => import('./cart/pages/Cart'));
-// const History = React.lazy(() => import('./orders/pages/History'));
-// const PaymentsApproval = React.lazy(() =>
-//   import('./orders/pages/PaymentsApproval')
-// );
+import { Home } from './main/pages/Home';
 
 const App = () => {
   const [isLoggedIn, isAdmin, userId, token, login, logout, userName] =
@@ -47,6 +32,9 @@ const App = () => {
     routes = (
       <Switch>
         <Route path='/' exact>
+          <Home />
+        </Route>
+        <Route path='/shop' exact>
           <Products />
         </Route>
         <Route path='/auth' exact>
@@ -59,6 +47,9 @@ const App = () => {
     routes = (
       <Switch>
         <Route path='/' exact>
+          <Home />
+        </Route>
+        <Route path='/shop' exact>
           <Products />
         </Route>
         <Route path='/profile' exact>
