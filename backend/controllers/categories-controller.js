@@ -1,3 +1,5 @@
+import { validationResult } from 'express-validator';
+
 import HttpError from '../models/http-errors.js';
 import Category from '../models/category.js';
 
@@ -17,6 +19,10 @@ export const getCategories = async (req, res, next) => {
 };
 
 export const createCategory = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError('Invalid inputs, please check your data', 422));
+  }
   const { name } = req.body;
   let hasCategory;
   try {

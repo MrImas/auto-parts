@@ -1,17 +1,24 @@
 import express from 'express';
-import { check } from 'express-validator';
+import { check, body } from 'express-validator';
 
 import * as usersController from '../controllers/users-controller.js';
 import { checkAuth } from '../middlewares/check-auth.js';
 
 const usersRouter = express.Router();
 
-usersRouter.post('/login', usersController.login);
+usersRouter.post(
+  '/login',
+  [
+    check('email').normalizeEmail().isEmail(),
+    check('password').isLength({ min: 6 }),
+  ],
+  usersController.login
+);
 
 usersRouter.post(
   '/signup',
   [
-    check('name').notEmpty(),
+    check('name').isString().notEmpty(),
     check('email').normalizeEmail().isEmail(),
     check('password').isLength({ min: 6 }),
   ],
@@ -20,10 +27,30 @@ usersRouter.post(
 
 usersRouter.use(checkAuth);
 
-usersRouter.patch('/profile', usersController.changePassword);
+usersRouter.patch(
+  '/profile',
+  [
+    check('email').normalizeEmail().isEmail(),
+    check('oldPassword').isLength({ min: 6 }),
+    check('password').isLength({ min: 6 }),
+  ],
+  usersController.changePassword
+);
 usersRouter.get('/cart', usersController.getCart);
-usersRouter.patch('/addtocart', usersController.addToCart);
-usersRouter.patch('/setcart', usersController.setCart);
+usersRouter.patch(
+  '/addtocart',
+  [check('pid').isString().notEmpty()],
+  usersController.addToCart
+);
+usersRouter.patch(
+  '/setcart',
+  [
+    body('cart').isArray(),
+    body('cart.*.productId').isString().notEmpty(),
+    body('cart.*.quantity').isInt({ min: 1 }),
+  ],
+  usersController.setCart
+);
 usersRouter.delete('/removefromcart/:pid', usersController.removeFromCart);
 
 usersRouter.get('/history', usersController.getHistoryOfPayments);

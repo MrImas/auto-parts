@@ -14,30 +14,36 @@ export const createPayment = async (req, res, next) => {
   }
   const { cart } = req.body;
   let totalPrice = 0;
-  const cartUpdated = await Promise.all(
-    cart.map(async (productAndQuantityObj) => {
-      let product;
-      try {
-        product = await Product.findById(productAndQuantityObj.productId);
-      } catch (err) {
-        return next(
-          new HttpError('Could not make the payment, please try again', 500)
-        );
-      }
-      if (!product) {
-        return next(
-          new HttpError(
+  let cartUpdated;
+  try {
+    cartUpdated = await Promise.all(
+      cart.map(async (productAndQuantityObj) => {
+        let product;
+        try {
+          product = await Product.findById(productAndQuantityObj.productId);
+        } catch (err) {
+          throw new HttpError(
+            'Could not make the payment, please try again',
+            500
+          );
+        }
+        if (!product) {
+          throw new HttpError(
             'Could not find one of the products in the cart, please try again',
             404
-          )
-        );
-      }
-      const priceForProductMulByQuan =
-        product.price * productAndQuantityObj.quantity;
-      totalPrice += priceForProductMulByQuan;
-      return { ...productAndQuantityObj, price: priceForProductMulByQuan };
-    })
-  );
+          );
+        }
+        const priceForProductMulByQuan =
+          product.price * productAndQuantityObj.quantity;
+        totalPrice += priceForProductMulByQuan;
+        return { ...productAndQuantityObj, price: priceForProductMulByQuan };
+      })
+    );
+  } catch (err) {
+    return next(
+      new HttpError('Could not make the payment, please try again', 500)
+    );
+  }
   const payment = new Payment({
     userId: req.userData.userId,
     cart: cartUpdated,

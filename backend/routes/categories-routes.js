@@ -1,4 +1,5 @@
 import express from 'express';
+import { check } from 'express-validator';
 
 import * as categoriesController from '../controllers/categories-controller.js';
 import { checkIsAdmin } from '../middlewares/check-admin.js';
@@ -11,7 +12,11 @@ categoriesRouter.get('/', categoriesController.getCategories);
 categoriesRouter.use(checkAuth);
 categoriesRouter.use(checkIsAdmin);
 
-categoriesRouter.post('/', categoriesController.createCategory);
+categoriesRouter.post(
+  '/',
+  [check('name').isString().notEmpty()],
+  categoriesController.createCategory
+);
 
 categoriesRouter.delete('/:cid', categoriesController.deleteCategory);
 

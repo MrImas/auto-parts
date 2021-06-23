@@ -25,7 +25,7 @@ export const signup = async (req, res, next) => {
   if (isUserSignedUp) {
     return next(
       new HttpError(
-        `Email ${email} already exists in the system, please try to log in.`,
+        `the Email provided is already exists in the system, please try to log in.`,
         422
       )
     );
@@ -62,17 +62,19 @@ export const signup = async (req, res, next) => {
     );
   }
 
-  res
-    .status(201)
-    .json({
-      userId: newUser.id,
-      role: newUser.role,
-      token,
-      userName: newUser.name,
-    });
+  res.status(201).json({
+    userId: newUser.id,
+    role: newUser.role,
+    token,
+    userName: newUser.name,
+  });
 };
 
 export const login = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError('Invalid inputs, please check your data', 422));
+  }
   const { email, password } = req.body;
   let existingUser;
   try {
@@ -133,10 +135,10 @@ export const login = async (req, res, next) => {
 };
 
 export const changePassword = async (req, res, next) => {
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   return next(new HttpError('Invalid inputs, please check your data', 422));
-  // }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError('Invalid inputs, please check your data', 422));
+  }
   const { email, oldPassword, password } = req.body;
   let userById, userByEmail;
   try {
@@ -191,6 +193,10 @@ export const changePassword = async (req, res, next) => {
 };
 
 export const setCart = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError('Invalid inputs, please check your data', 422));
+  }
   const { cart } = req.body;
   let user;
   try {
@@ -205,27 +211,33 @@ export const setCart = async (req, res, next) => {
       new HttpError('Could not identify user, please try again', 403)
     );
   }
-  const cartUpdated = await Promise.all(
-    cart.map(async (productAndQuantityObj) => {
-      let product;
-      try {
-        product = await Product.findById(productAndQuantityObj.productId);
-      } catch (err) {
-        return next(
-          new HttpError('Could not update the cart, please try again', 500)
-        );
-      }
-      if (!product) {
-        return next(
-          new HttpError(
+  let cartUpdated;
+  try {
+    cartUpdated = await Promise.all(
+      cart.map(async (productAndQuantityObj) => {
+        let product;
+        try {
+          product = await Product.findById(productAndQuantityObj.productId);
+        } catch (err) {
+          throw new HttpError(
+            'Could not update the cart, please try again',
+            500
+          );
+        }
+        if (!product) {
+          throw new HttpError(
             'Could not find one of the products in the cart, please try again',
             404
-          )
-        );
-      }
-      return { ...productAndQuantityObj };
-    })
-  );
+          );
+        }
+        return { ...productAndQuantityObj };
+      })
+    );
+  } catch (err) {
+    return next(
+      new HttpError('Could not update the cart, please try again', 500)
+    );
+  }
   user.cart = cartUpdated;
   try {
     await user.save();
@@ -234,10 +246,16 @@ export const setCart = async (req, res, next) => {
       new HttpError('Could not update the cart, please try again.', 500)
     );
   }
-  res.json({ cart: user.cart.map((obj) => obj.toObject({ getters: true })) });
+  res.json({
+    cart: user.cart.map((obj) => obj.toObject({ getters: true })),
+  });
 };
 
 export const addToCart = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError('Invalid inputs, please check your data', 422));
+  }
   const { pid } = req.body;
 
   let user;

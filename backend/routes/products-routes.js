@@ -19,10 +19,11 @@ productsRouter.post(
   '/',
   fileUpload.single('image'),
   [
-    check('title').notEmpty(),
+    check('title').notEmpty().isString(),
     check('price').isInt({ min: 1 }),
-    check('description').notEmpty(),
-    check('content').notEmpty(),
+    check('description').notEmpty().isString(),
+    check('content').notEmpty().isString(),
+    check('category').notEmpty().isString(),
   ],
   productsController.createProduct
 );
@@ -33,8 +34,9 @@ productsRouter.patch(
   [
     check('title').notEmpty(),
     check('price').isInt({ min: 1 }),
-    check('description').notEmpty(),
-    check('content').notEmpty(),
+    check('description').notEmpty().isString(),
+    check('content').notEmpty().isString(),
+    check('category').notEmpty().isString(),
   ],
   productsController.updateProduct
 );

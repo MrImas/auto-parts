@@ -23,6 +23,9 @@ export const createProduct = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return next(new HttpError('Invalid inputs, please check your data', 422));
   }
+  if (!req.file) {
+    return next(new HttpError('Invalid inputs, please check your data', 422));
+  }
   const { title, price, description, content, category } = req.body;
   const createdProduct = new Product({
     title,
